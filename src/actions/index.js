@@ -67,19 +67,11 @@ export const locationDenied = () => async dispatch => {
 	);
 }
 
-export const getRestaurants = () => async dispatch =>  {
-	const geolocation = window.navigator.geolocation;
-	if (geolocation) {
-		geolocation.getCurrentPosition(
-			async position => {
-				const lat = await position.coords.latitude;
-				const lng = await position.coords.longitude;
-				const response = await restaurants.get('/nearby?searchTerm=' + lat + ',' + lng);
-				if (response.status === 200) {
-					dispatch({ type: RENDER_LIST, payload: response.data.results });
-				}
-			}
-		)
+export const getRestaurants = () => async (dispatch, getState) =>  {
+	const { lat, lng } = getState().coords;
+	const response = await restaurants.get('/nearby?searchTerm=' + lat + ',' + lng);
+	if (response.status === 200) {
+		dispatch({ type: RENDER_LIST, payload: response.data });
 	}
 }
 

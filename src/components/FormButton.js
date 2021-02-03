@@ -2,7 +2,7 @@ import React from 'react';
 
 class FormButton extends React.Component {
 	componentDidMount(){
-		console.log(this.props)
+
 	}
 
 	renderMessage = (props, message) => {
