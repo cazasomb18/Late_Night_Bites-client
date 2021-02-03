@@ -1,63 +1,94 @@
+// import _ from 'lodash';
 import auth from '../apis/auth';
-// import restaurants from '../apis/restaurants';
+import restaurants from '../apis/restaurants';
 import {
 	LOG_IN,
 	LOG_OUT,
 	REGISTER_USER,
 	GET_COORDS,
-	GEOLOCATION_DENIED
+	GEOLOCATION_DENIED,
+	RENDER_LIST,
+	TOGGLE_REGISTER,
+	TOGGLE_LOGIN
 } from './types';
 
 
 export const registerUser = formValues => async dispatch => {
 	const response = await auth.post('/register', { ...formValues });
-	const { user } = await response.data;
-	dispatch({ type: REGISTER_USER, payload: user });
+	if (response.status === 200) {
+		const newUser = await response.data;
+		dispatch({ type: REGISTER_USER, payload: newUser })
+	}
+	return;
+}
 
-	//nav to login
 
-};
-
-
-export const logIn = (formValues, lat, lng )=> async dispatch => {
+export const logIn = formValues => async dispatch => {
 	const response = await auth.post('/login', { ...formValues});
-	dispatch({ type: LOG_IN, payload: response });
-	
+	if (response.status === 200) {
+		const loginResponse =  await response.data;
+		dispatch({ type: LOG_IN, payload: loginResponse });	
+	}
+	return;
 	//navigate to late restaurants list
-	// restaurants.get(`/restaurants/nearby${lat + lng}`);
-};
+}
 
 
-export const logOut = async dispatch => {
+export const logOut = () => async dispatch => {
 	const response = await auth.get('/logout');
-	dispatch({ type: LOG_OUT, payload: response.data });
-
+	if (response.status === 200) {
+		dispatch({ type: LOG_OUT });
+	}
 	// navigate to login
 	// auth.get('/');
-};
+}
 
 
 export const getCoords = () => async dispatch => {
-	const geolocation = await window.navigator.geolocation;
+	const geolocation = window.navigator.geolocation;
 	geolocation.getCurrentPosition(
 		async position => {
 			const lat = await position.coords.latitude;
 			const lng = await position.coords.longitude;
-			dispatch({ type: GET_COORDS, payload: {lat: lat, lng: lng} });
+			dispatch({ type: GET_COORDS, payload: { lat: lat, lng: lng } });
 		}
 	);
-};
+}
 
 export const locationDenied = () => async dispatch => {
 	const geolocation = window.navigator.geolocation;
 	geolocation.getCurrentPosition(
 		err => {
 			if (err.code === 1) {
-				const errorMessage = "Location denied."
+				const errorMessage = "Location denied.  Please enable location services."
 				dispatch({ type: GEOLOCATION_DENIED, payload: errorMessage });
 			}
 		}
 	);
-};
+}
+
+export const getRestaurants = () => async dispatch =>  {
+	const geolocation = window.navigator.geolocation;
+	if (geolocation) {
+		geolocation.getCurrentPosition(
+			async position => {
+				const lat = await position.coords.latitude;
+				const lng = await position.coords.longitude;
+				const response = await restaurants.get('/nearby?searchTerm=' + lat + ',' + lng);
+				if (response.status === 200) {
+					dispatch({ type: RENDER_LIST, payload: response.data.results });
+				}
+			}
+		)
+	}
+}
+
+export const toggleRegisterForm = () => dispatch => {
+	dispatch({ type: TOGGLE_REGISTER })
+}
+
+export const toggleLogInForm = () => dispatch => {
+	dispatch({ type: TOGGLE_LOGIN })
+}
 
 

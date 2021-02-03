@@ -1,11 +1,10 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
-class AuthForm extends React.Component {
+class LoginForm extends React.Component {
 	componentDidMount(){
-		
-	}
 
+	}
 	renderError({ error, touched }) {
 		if (touched && error ) {
 			return (
@@ -34,16 +33,14 @@ class AuthForm extends React.Component {
 	render(){
 		return (
 			<div>
-				<h3 className="ui header">Please Register</h3>
+				<h3 className="ui header">Please Log In</h3>
 				<form className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
 					<Field name="userName" type="text" component={this.renderInput} label="Username"/>
 					<Field name="password" type="password" component={this.renderInput} label="Password" />
-					<Field name="email" component={this.renderInput} label="Email" />
 					<button className="ui button primary">Submit</button>
 				</form>
 			</div>
 		);
-
 	}
 }
 
@@ -53,9 +50,6 @@ const validate = formValues => {
 	if (!formValues.userName) {
 		errors.userName = 'You must enter a user name';
 	}
-	if (!formValues.email) {
-		errors.email = 'You must enter a valid email'
-	}
 	if (!formValues.password) {
 		errors.password = 'You must enter a valid password'
 	}
@@ -63,6 +57,6 @@ const validate = formValues => {
 };
 
 export default reduxForm({
-	form: 'authForm',
+	form: 'loginForm',
 	validate
-})(AuthForm);
+})(LoginForm);

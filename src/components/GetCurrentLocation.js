@@ -8,8 +8,6 @@ class GetCurrentLocation extends React.Component {
 
 	componentDidMount(){
 		this.props.getCoords();
-		console.log(this.state);
-		console.log(this.props);
 	}
 
 	renderLocation() {
@@ -24,8 +22,6 @@ class GetCurrentLocation extends React.Component {
 	}
 
 	render(){
-		console.log(this.state);
-		console.log(this.props);
 		return (
 			<div>
 				{this.renderLocation()}
@@ -42,4 +38,4 @@ const mapStateToProps = state => {
 	}
 };
 
-export default connect(mapStateToProps, { getCoords })(GetCurrentLocation);
+export default connect( mapStateToProps, { getCoords })(GetCurrentLocation);

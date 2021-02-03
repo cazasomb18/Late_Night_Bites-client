@@ -1,20 +1,33 @@
 import React from 'react';
-import Link from './Link';
+import { connect } from 'react-redux';
 
-const Header = () => {
-	return (
-		<div className="ui secondary pointing menu">
-			<Link href="/auth/register" className='item'>
-				Register
-			</Link>
-			<Link href="/auth/login" className='item'>
-				Login
-			</Link>
-			<Link href="/restaurants/nearby/"></Link>
-			<Link></Link>
-			
-		</div>
-	)
+class Header extends React.Component {
+	
+	componentDidMount(){
+		
+	}
+	render(){
+		return (
+			<div className="ui secondary pointing menu">
+				<button className='item'>
+					Register
+				</button>
+				<button className='item end'>
+					Login
+				</button>
+			</div>
+		);
+	}
 };
 
-export default Header;
+const mapStateToProps = state => {
+	return {
+		isLoggedIn: state.auth.isLoggedIn,
+		isRegistered: state.auth.isRegistered,
+		userName: state.auth.userName
+	}
+}
+
+export default connect(
+	mapStateToProps
+)(Header);
