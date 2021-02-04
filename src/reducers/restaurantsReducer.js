@@ -1,5 +1,4 @@
 // import _ from 'lodash';
-
 import { RENDER_LIST } from '../actions/types';
 
 const restaurantsReducer = (state = {}, action) => {

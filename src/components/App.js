@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Auth from './Auth';
-import GetCurrentLocation from './GetCurrentLocation';
-import Header from './Header';
-import RestaurantList from './RestaurantList';
+import Auth from './auth/Auth';
+import GetCurrentLocation from './geo/GetCurrentLocation';
+// import Header from './Header';
+import RestaurantList from './restaurants/RestaurantList';
 
 
 class App extends React.Component {
@@ -15,8 +15,6 @@ class App extends React.Component {
 		return (
 			<div className="ui container">
 				<GetCurrentLocation />
-				<Header />
-				<h1>Late Night Bites</h1>
 				<Auth />
 				<RestaurantList/>
 			</div>

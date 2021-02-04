@@ -50,7 +50,7 @@ export const getCoords = () => async dispatch => {
 		async position => {
 			const lat = await position.coords.latitude;
 			const lng = await position.coords.longitude;
-			dispatch({ type: GET_COORDS, payload: { lat: lat, lng: lng } });
+			dispatch({ type: GET_COORDS, payload: { lat: lat, lng: lng, errorMessage: '' } });
 		}
 	);
 }
@@ -68,10 +68,11 @@ export const locationDenied = () => async dispatch => {
 }
 
 export const getRestaurants = () => async (dispatch, getState) =>  {
-	const { lat, lng } = getState().coords;
+	const { lat, lng } = await getState().coords;
 	const response = await restaurants.get('/nearby?searchTerm=' + lat + ',' + lng);
 	if (response.status === 200) {
-		dispatch({ type: RENDER_LIST, payload: response.data });
+		const restaurants = response.data;
+		dispatch({ type: RENDER_LIST, payload: restaurants });
 	}
 }
 

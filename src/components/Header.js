@@ -8,13 +8,16 @@ class Header extends React.Component {
 	}
 	render(){
 		return (
-			<div className="ui secondary pointing menu">
-				<button className='item'>
-					Register
-				</button>
-				<button className='item end'>
-					Login
-				</button>
+			<div>
+				<h1 className="ui headline">Late Night Bites</h1>
+				<div className="ui secondary menu">
+					<button className='item'>
+						Register
+					</button>
+					<button className='item end'>
+						Login
+					</button>
+				</div>
 			</div>
 		);
 	}

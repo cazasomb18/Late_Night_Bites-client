@@ -7,8 +7,8 @@ import {
 } from '../actions/types';
 
 const INITIAL_STATE = {
-	isLoggedIn: true,
-	isRegistered: true,
+	isLoggedIn: false,
+	isRegistered: false,
 	userName: ''
 }
 

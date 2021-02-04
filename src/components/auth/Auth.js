@@ -7,7 +7,7 @@ import {
 	registerUser, 
 	toggleRegisterForm, 
 	toggleLogInForm 
-} from '../actions';
+} from '../../actions';
 import AuthForm from './AuthForm';
 import LoginForm from './LoginForm';
 import FormButton from './FormButton';
@@ -28,7 +28,7 @@ class Auth extends React.Component {
 		if (this.props.isRegistered && !this.props.isLoggedIn) {
 			return <div>{this.renderLogInForm()}</div>;
 		}
-		if (this.props.isRegistered && this.props.isLoggedIn && this.props.lat && this.props.lng) {
+		if (this.props.isRegistered && this.props.isLoggedIn) {
 			return <div>{this.renderLogOutButton()}</div>;
 		}
 
