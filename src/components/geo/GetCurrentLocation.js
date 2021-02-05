@@ -2,15 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Spinner from './Spinner';
-import { getCoords, locationDenied } from '../../actions';
+import { getCoords } from '../../actions';
 
 class GetCurrentLocation extends React.Component {
 
 	componentDidMount(){
-		if (window.navigator.geolocation){
+		if (window.navigator.geolocation) {
 			this.props.getCoords();
 		}
-		this.props.locationDenied();
 	}
 
 	renderLocation() {
@@ -20,10 +19,11 @@ class GetCurrentLocation extends React.Component {
 		if (!this.props.errorMessage && this.props.lat && this.props.lng) {
 			return;
 		}
-		return <Spinner message={"Please Accept Location Request"} />
+		return <Spinner message={this.props.errorMessage} />
 	}
 
 	render(){
+		console.log(this.props)
 		return (
 			<div>
 				{this.renderLocation()}
@@ -40,4 +40,7 @@ const mapStateToProps = state => {
 	}
 };
 
-export default connect( mapStateToProps, { getCoords, locationDenied })(GetCurrentLocation);
+export default connect( 
+	mapStateToProps, 
+	{ getCoords }
+)(GetCurrentLocation);

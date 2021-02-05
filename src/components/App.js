@@ -4,6 +4,7 @@ import Auth from './auth/Auth';
 import GetCurrentLocation from './geo/GetCurrentLocation';
 // import Header from './Header';
 import RestaurantList from './restaurants/RestaurantList';
+import MapContainer from './map/MapContainer';
 
 
 class App extends React.Component {
@@ -16,7 +17,8 @@ class App extends React.Component {
 			<div className="ui container">
 				<GetCurrentLocation />
 				<Auth />
-				<RestaurantList/>
+				<RestaurantList />
+				<MapContainer />
 			</div>
 		);
 	}

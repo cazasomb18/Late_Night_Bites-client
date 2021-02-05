@@ -9,7 +9,8 @@ import {
 	GEOLOCATION_DENIED,
 	RENDER_LIST,
 	TOGGLE_REGISTER,
-	TOGGLE_LOGIN
+	TOGGLE_LOGIN, 
+	GET_PHOTOS
 } from './types';
 
 
@@ -46,25 +47,22 @@ export const logOut = () => async dispatch => {
 
 export const getCoords = () => async dispatch => {
 	const geolocation = window.navigator.geolocation;
-	geolocation.getCurrentPosition(
-		async position => {
-			const lat = await position.coords.latitude;
-			const lng = await position.coords.longitude;
-			dispatch({ type: GET_COORDS, payload: { lat: lat, lng: lng, errorMessage: '' } });
-		}
-	);
-}
-
-export const locationDenied = () => async dispatch => {
-	const geolocation = window.navigator.geolocation;
-	geolocation.getCurrentPosition(
-		err => {
-			if (err.code === 1) {
-				const errorMessage = "Location denied.  Please enable location services."
-				dispatch({ type: GEOLOCATION_DENIED, payload: errorMessage });
+	if (geolocation) {
+		let errorMessage = '';
+		geolocation.getCurrentPosition(
+			async position => {
+				const lat = await position.coords.latitude;
+				const lng = await position.coords.longitude;
+				dispatch({ type: GET_COORDS, payload: { lat: lat, lng: lng, errorMessage: errorMessage } });
+			},
+			err => {
+				if (err.code === 1 ) {
+					errorMessage = "Location denied. Please enable location services."
+					dispatch({ type: GEOLOCATION_DENIED, payload: errorMessage })
+				}
 			}
-		}
-	);
+		);
+	}
 }
 
 export const getRestaurants = () => async (dispatch, getState) =>  {
@@ -82,6 +80,15 @@ export const toggleRegisterForm = () => dispatch => {
 
 export const toggleLogInForm = () => dispatch => {
 	dispatch({ type: TOGGLE_LOGIN })
+}
+
+export const getPhotos = () => async (dispatch, getState) => {
+	const { lat, lng } = await getState().coords;
+	const response = await restaurants.get('/nearby?SearchTerm=' + lat + ',' + lng);
+	if (response.status === 200) {
+		const photos = response.photos;
+		dispatch({ type: GET_PHOTOS, payload: photos })
+	}
 }
 
 

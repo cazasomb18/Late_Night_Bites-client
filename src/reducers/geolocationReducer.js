@@ -7,7 +7,7 @@ const geolocationReducer = (state = {}, action) => {
 			return {...state, ..._.pick(action.payload, 'lat', 'lng', 'errorMessage') };
 
 		case GEOLOCATION_DENIED:
-			return {...state, [action.payload]: action.payload };
+			return {...state, ...action.payload };
 
 		default:
 			return state;
