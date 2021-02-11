@@ -9,7 +9,8 @@ import {
 const INITIAL_STATE = {
 	isLoggedIn: false,
 	isRegistered: false,
-	userName: ''
+	userName: '',
+	user: ''
 }
 
 const authReducer = (state = INITIAL_STATE, action) => {
@@ -19,7 +20,8 @@ const authReducer = (state = INITIAL_STATE, action) => {
 				...state,
 				isLoggedIn: true,
 				isRegistered: true,
-				userName: action.payload.data.userName
+				userName: action.payload.data.userName,
+				user: action.payload.data
 
 			};
 		case LOG_OUT: 
@@ -27,14 +29,16 @@ const authReducer = (state = INITIAL_STATE, action) => {
 				...state,
 				isLoggedIn: false,
 				isRegistered: false,
-				userName: ''
+				userName: '',
+				user: ''
 			};
 		case REGISTER_USER:
 			return {
 				...state,
 				isLoggedIn: false,
 				isRegistered: true,
-				userName: action.payload.data.userName
+				userName: action.payload.data.userName,
+				user: ''
 			};
 		case TOGGLE_REGISTER:
 			return {

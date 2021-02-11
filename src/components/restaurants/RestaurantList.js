@@ -6,13 +6,10 @@ import RenderList from './RenderList';
 
 class RestaurantList extends React.Component {
 	componentDidMount(){
-		this.props.getCoords(
-			this.props.getRestaurants()
-		);
+
 	}
 
 	render(){
-		console.log(this.props);
 		if (this.props.isLoggedIn && this.props.lat && this.props.lng) {
 			return (
 				<div className="ui list">
@@ -20,9 +17,8 @@ class RestaurantList extends React.Component {
 					<RenderList/>
 				</div>
 			); 
-		} else {
-			return null;
 		}
+		return null;
 	}
 };
 

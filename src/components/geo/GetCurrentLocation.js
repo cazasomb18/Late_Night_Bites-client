@@ -7,14 +7,12 @@ import { getCoords } from '../../actions';
 class GetCurrentLocation extends React.Component {
 
 	componentDidMount(){
-		if (window.navigator.geolocation) {
-			this.props.getCoords();
-		}
+		this.props.getCoords();
 	}
 
 	renderLocation() {
-		if (this.props.errorMessage && !this.props.coords.lat && !this.props.coords.lng) {
-			return <div>Error: {this.props.coords.errorMessage}</div>
+		if (this.props.errorMessage && !this.props.lat && !this.props.lng) {
+			return <div>Error: {this.props.errorMessage}</div>
 		}
 		if (!this.props.errorMessage && this.props.lat && this.props.lng) {
 			return;
@@ -23,7 +21,6 @@ class GetCurrentLocation extends React.Component {
 	}
 
 	render(){
-		console.log(this.props)
 		return (
 			<div>
 				{this.renderLocation()}
