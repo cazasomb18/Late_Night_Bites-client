@@ -11,9 +11,8 @@ import {
 	TOGGLE_REGISTER,
 	TOGGLE_LOGIN, 
 	GET_PHOTOS,
-	POST_COMMENTS
+	POST_COMMENT
 } from './types';
-
 
 export const registerUser = formValues => async dispatch => {
 	const response = await auth.post('/register', { ...formValues });
@@ -68,7 +67,7 @@ export const getCoords = () => async dispatch => {
 		)
 	}
 	
-};
+}
 
 export const getRestaurants = () => async (dispatch, getState) =>  {
 	const { lat, lng } = await getState().coords;
@@ -96,31 +95,10 @@ export const getPhotos = () => async (dispatch, getState) => {
 	}
 }
 
-export const createComment = () => async (dispatch, getState) => {
-	const user = await getState().auth;
-	const { lat, lng } = await getState().coords;
-	// const response = await restaurants.post('/' + restaurant.place_id + '/comment/');
-	// NEXT STEPS: 
-	// 	1 - make an api for the comment.post()
-	// 	2 - set the response to comment.post('/whatever')
-	// 	3 - action/type: CREATE_COMMENT
-	// 	4 - if response.status === 200 dispatch type: CREATE_COMMENT, payload: response.data
-
+export const postComment = formValues => async (dispatch, getState) => {
+	const response = await restaurants.get('/:place_id/comment', {...formValues});
+	if (response.status === 200) {
+		dispatch({ type: POST_COMMENT, payload: response });
+	}
 }
-
-  // 	postRestaurantComments = async (e)  => {
-  // 		// e.preventDefault();
-		// try{
-	 //        const postComments = await fetch(process.env.REACT_APP_BACK_END_URL + '/restaurants/' + this.state.targetRestaurant.place_id + '/comment/', {
-	 //          method: 'POST',
-	 //          credentials: 'include',
-	 //          body: JSON.stringify({
-	 //          	commentAuthor: this.props.userName,
-	 //          	commentBody: this.state.commentInput,
-	 //          	restaurant_name: this.state.targetRestaurant.name,
-	 //          	name: this.state.targetRestaurant.name,
-	 //          	address: this.state.targetRestaurant.vicinity,
-	 //          	place_id: this.state.targetRestaurant.place_id
-	 //          }),
-
 

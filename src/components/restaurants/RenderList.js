@@ -5,6 +5,7 @@ import _ from 'lodash';
 import MapContainer from '../map/MapContainer';
 import { getRestaurants, getCoords } from '../../actions';
 import PostComments from '../comments/PostComments';
+import Spinner from '../geo/Spinner';
 
 class RenderList extends React.Component {
 	constructor(props){
@@ -17,26 +18,22 @@ class RenderList extends React.Component {
 	}
 
 	componentDidMount(){
-		if (this.props.lng && this.props.lat) {
-			this.props.getRestaurants();
-		}
+		this.props.getRestaurants();
 	}
 
 	renderList = props => {
-		if (this.props.restaurants !== undefined ) {
-			return this.props.restaurants.map( (restaurant, index) => {
+		if (this.props.restaurants.status === 200) {
+			return this.props.restaurants.data.results.map( (restaurant, index) => {
 				const photoReference = restaurant.photos[0].photo_reference;
-				const priceN = restaurant.price_level;
-				const ratingN = Math.floor(restaurant.rating);
-				const dollarIcons = _(priceN).times(i => <i className="dollar sign icon" key={i}></i>);
-				const starsIcons = _(ratingN).times(i => <i className="star outline icon" key={i}></i>);
+				const dollarIcons = _(restaurant.price_level).times(i => <i className="dollar sign icon" key={i}></i>);
+				const starsIcons = _(Math.floor(restaurant.rating)).times(i => <i className="star outline icon" key={i}></i>);
 				if (restaurant.business_status === "OPERATIONAL") {
 					return (
 						<div className="item" key={restaurant.place_id}>
 							<h3>{restaurant.name}</h3>
 							<div className="content">
 								<img href={'/'} alt="source unavailable"/>
-								<h5>{restaurant.vicinity}</h5>
+								<h5>{restaurant.vicinity + ", " + restaurant.plus_code.compound_code.split(',')[1].split()}</h5>
 								<div className="ui label">
 									<h5>Rating: {starsIcons}</h5>
 									<h5>Price: {dollarIcons}</h5>
@@ -56,14 +53,14 @@ class RenderList extends React.Component {
 				return null;
 			})
 		} 
-		return <div>There was an error processing getRestaurants API request</div>;
+		return <Spinner message="Finding Late Night Bites"/>;
 	}
 
 	toggleCommentView = (e, id) => {
 		if (!this.state.addingComment){
 			this.setState({
 				addingComment: true,
-				targetRestaurant: this.props.restaurants[e.currentTarget.id]
+				targetRestaurant: this.props.restaurants.data.results[e.currentTarget.id]
 			})
 		};
 		if (this.state.addingComment){
@@ -111,7 +108,7 @@ const mapStateToProps = state => {
 	return {
 		lat: state.coords.latitude,
 		lng: state.coords.longitude,
-		restaurants: state.restaurants.data.results
+		restaurants: state.restaurants
 	}
 	
 };
