@@ -1,0 +1,12 @@
+.item {
+	margin-top: 20px;
+
+}
+
+.item, h5 {
+	margin-left: 20px;
+}
+
+.content button {
+	float: right;
+}

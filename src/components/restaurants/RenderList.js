@@ -3,17 +3,17 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import MapContainer from '../map/MapContainer';
-import { getRestaurants, getCoords } from '../../actions';
+import { getRestaurants } from '../../actions';
 import PostComments from '../comments/PostComments';
 import Spinner from '../geo/Spinner';
+import './restaurants.css';
 
 class RenderList extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
 			addingComment: false,
-			targetRestaurant: null,
-			commentInput: ''
+			targetRestaurant: null
 		}
 	}
 
@@ -24,6 +24,7 @@ class RenderList extends React.Component {
 	renderList = props => {
 		if (this.props.restaurants.status === 200) {
 			return this.props.restaurants.data.results.map( (restaurant, index) => {
+				const address = restaurant.vicinity + ", " + restaurant.plus_code.compound_code.split(',')[1].split();
 				const photoReference = restaurant.photos[0].photo_reference;
 				const dollarIcons = _(restaurant.price_level).times(i => <i className="dollar sign icon" key={i}></i>);
 				const starsIcons = _(Math.floor(restaurant.rating)).times(i => <i className="star outline icon" key={i}></i>);
@@ -32,16 +33,16 @@ class RenderList extends React.Component {
 						<div className="item" key={restaurant.place_id}>
 							<h3>{restaurant.name}</h3>
 							<div className="content">
-								<img href={'/'} alt="source unavailable"/>
-								<h5>{restaurant.vicinity + ", " + restaurant.plus_code.compound_code.split(',')[1].split()}</h5>
-								<div className="ui label">
+								{/*<img href={'/'} alt="source unavailable"/>*/}
+								<h5 className="ui header">{address}</h5>
+								<div className="ui label content">
 									<h5>Rating: {starsIcons}</h5>
 									<h5>Price: {dollarIcons}</h5>
 									<h5>Total reviews: {restaurant.user_ratings_total}</h5>
 								</div>
-								<p>{photoReference}</p>
+								{/*<p>{photoReference}</p>*/}
 								<button 
-									className="ui primary button" 
+									className="ui primary button content" 
 									onClick={this.toggleCommentView} 
 									id={index}
 								>Add Comment
@@ -78,17 +79,15 @@ class RenderList extends React.Component {
 					<div className="ui list">
 						{this.renderList()}
 					</div>
-					<MapContainer 
-						restaurants={this.props.restaurants} 
-						lat={this.props.latitude} 
-						lng={this.props.longitude} 
-						getRestaurants={this.props.getRestaurants}
-					/>
+					<MapContainer/>
 				</div>
 			)
 		} return (
 			<div>
-				<PostComments restaurant={this.state.targetRestaurant}/>
+				<PostComments 
+					restaurant={this.state.targetRestaurant} 
+					toggleCommentView={this.toggleCommentView}
+				/>
 				<button 
 					className="ui red button"
 					onClick={this.toggleCommentView} 
@@ -99,21 +98,21 @@ class RenderList extends React.Component {
 	}
 
 	render(){
-		console.log(this.state);
 		return <div>{this.renderComponent()}</div>;
 	}
 }
 
 const mapStateToProps = state => {
 	return {
-		lat: state.coords.latitude,
-		lng: state.coords.longitude,
-		restaurants: state.restaurants
+		lat: state.coords.lat,
+		lng: state.coords.lng,
+		restaurants: state.restaurants,
+		user: state.auth.user
 	}
 	
 };
 
 export default connect(
 	mapStateToProps,
-	{ getRestaurants, getCoords }
+	{ getRestaurants }
  )(RenderList);

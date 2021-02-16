@@ -1,8 +1,5 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import Geocode from 'react-geocode';
-
-Geocode.setApiKey(process.env.REACT_APP_API_KEY);
 
 class CommentForm extends React.Component {
 	componentDidMount(){
@@ -30,25 +27,32 @@ class CommentForm extends React.Component {
 		);
 	}
 
-	renderReadOnlyInput = ({ label, type, defaultValue}) => {
+	renderReadOnlyInput = ({ label, type, defaultValue }) => {
 		const className = "field ui header";
 		return (
 			<div className={className}>
 				<label>{label}</label>
-				<input readOnly type={type} defaultValue={defaultValue}/>
+				<input type={type} readOnly defaultValue={defaultValue}/>
 			</div>
 		);
 	}
 
-	onSubmit = formValues => {
+	onSubmit = (formValues) => {
+		formValues.commentAuthor = this.props.userName;
+		formValues.restaurant_name = this.props.restaurant.name;
+		formValues.name = this.props.restaurant.name;
+		formValues.address = this.props.restaurant.vicinity + ',' + this.props.restaurant.plus_code.compound_code.split(',')[1].split();
+		formValues.place_id = this.props.restaurant.place_id;
 		this.props.postComment(formValues);
+		this.props.toggleCommentView();
+
 	}
 
 	render(){
 		return(
 			<form className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
 				<Field 
-					name="restaurant_name name" 
+					name="name" 
 					component={this.renderReadOnlyInput} 
 					defaultValue={this.props.restaurant.name} 
 					type="text" 
@@ -69,7 +73,7 @@ class CommentForm extends React.Component {
 					label="Place Id"
 				/>
 				<Field 
-					name="commentInput" 
+					name="commentBody" 
 					component={this.renderInput} 
 					type="text" 
 					label="Comment"
@@ -81,7 +85,6 @@ class CommentForm extends React.Component {
 					type="text" 
 					label="Author" 
 				/>
-				{/*<Field name="name" component={this.renderReadOnlyInput} defaultValue={this.props.restaurant.name} type="text" label="Restaurant Name"/>*/}
 				<button className="ui button primary" type="submit">Submit</button>
 			</form>
 		);
@@ -91,8 +94,8 @@ class CommentForm extends React.Component {
 const validate = formValues => {
 	const errors = {};
 
-	if (!formValues.commentInput) {
-		errors.commentInput = 'You must enter a comment'
+	if (!formValues.commentBody) {
+		errors.commentBody = 'You must enter a comment'
 	}
 	return errors;
 };

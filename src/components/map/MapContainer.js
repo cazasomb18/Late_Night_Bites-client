@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import mapboxgl, { Marker } from 'mapbox-gl';
 
-import '../../map.css';
+import './map.css';
 import Spinner from '../geo/Spinner';
 
 mapboxgl.accessToken = process.env.REACT_APP_MB_TOKEN;

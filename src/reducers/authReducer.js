@@ -1,16 +1,21 @@
+import _ from 'lodash';
+
 import { 
 	LOG_IN,
 	LOG_OUT,
 	REGISTER_USER,
 	TOGGLE_REGISTER,
-	TOGGLE_LOGIN 
+	TOGGLE_LOGIN,
+	GET_USER_RESTAURANTS
 } from '../actions/types';
 
 const INITIAL_STATE = {
 	isLoggedIn: false,
-	isRegistered: false,
+	isRegistered: true,
 	userName: '',
-	user: ''
+	user: '',
+	restaurants: [],
+	comments: []
 }
 
 const authReducer = (state = INITIAL_STATE, action) => {
@@ -21,7 +26,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
 				isLoggedIn: true,
 				isRegistered: true,
 				userName: action.payload.data.userName,
-				user: action.payload.data
+				user: _.omit(action.payload.data, ['password'])
 
 			};
 		case LOG_OUT: 
@@ -49,6 +54,13 @@ const authReducer = (state = INITIAL_STATE, action) => {
 			return {
 				...state,
 				isRegistered: true
+			}
+		case GET_USER_RESTAURANTS:
+			return {
+				...state,
+				restaurants: action.payload.foundRestaurants,
+				comments: action.payload.foundComments
+
 			}
 		default: 
 			return state;
