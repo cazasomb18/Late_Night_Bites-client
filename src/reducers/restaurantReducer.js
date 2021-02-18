@@ -1,8 +1,11 @@
+// import _ from 'lodash';
 import { POST_COMMENT, SHOW_RESTAURANT_COMMENTS } from '../actions/types';
 
 const INITIAL_STATE = {
-	restaurant: '',
-	comments: []
+	restaurant: null,
+	newRestaurant: null,
+	comments: [],
+	newComment: ''
 }
 
 const restaurantReducer = (state=INITIAL_STATE, action ) => {
@@ -10,13 +13,14 @@ const restaurantReducer = (state=INITIAL_STATE, action ) => {
 		case POST_COMMENT:
 			return {
 				...state,
-				restaurant: action.payload.restaurant,
-				commments: [action.payload.newComment]
+				newRestaurant: action.payload.restaurant,
+				newComment: action.payload.newComment
 			}
 		case SHOW_RESTAURANT_COMMENTS: 
 			return {
 				...state,
-				restaurant: action.payload.data.foundRestaurant
+				comments: [...action.payload.restaurant.coments],
+				restaurant: action.payload.restaurant
 			}
 		default: 
 			return state;

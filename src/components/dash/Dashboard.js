@@ -6,9 +6,9 @@ import { getUserRestaurantInfo } from '../../actions';
 class Dashboard extends React.Component {
 
 	componentDidMount(){
-		if (this.props.userRestaurants && this.props.userComments) {
-			this.props.getUserRestaurantInfo();
-		}
+		// if (this.props.userRestaurants && this.props.userComments) {
+		// 	this.props.getUserRestaurantInfo();
+		// }
 	}
 	render(){
 		// console.log(this.props);

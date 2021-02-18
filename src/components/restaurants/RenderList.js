@@ -24,7 +24,7 @@ class RenderList extends React.Component {
 	}
 
 	renderList = props => {
-		if (this.props.restaurants.status === 200) {
+		if (this.props.restaurants.ok === true) {
 			return this.props.restaurants.data.results.map( (restaurant, index) => {
 				const address = restaurant.vicinity + ", " + restaurant.plus_code.compound_code.split(',')[1].split();
 				const photoReference = restaurant.photos[0].photo_reference;
@@ -116,6 +116,7 @@ class RenderList extends React.Component {
 			return (
 				<div>
 					<RestaurantShow
+						place_id={this.state.targetRestaurant.place_id} 
 						restaurant={this.state.targetRestaurant}
 						toggleRestaurantView={this.toggleRestaurantView}
 					/>
@@ -131,6 +132,7 @@ class RenderList extends React.Component {
 		if (!this.state.viewingRestaurant && !this.state.addingComment){
 			return (
 				<div>
+					<h2 className="ui header">Late Restaurants List</h2>
 					<div className="ui list">
 						{this.renderList()}
 					</div>
@@ -141,7 +143,6 @@ class RenderList extends React.Component {
 	}
 
 	render(){
-		console.log(this.props);
 		return <div>{this.renderComponent()}</div>;
 	}
 }

@@ -39,27 +39,29 @@ export const logOut = () => async dispatch => {
 	}
 }
 
-export const getCoords = () => async dispatch => {
-	const geolocation = window.navigator.geolocation;
+export const getCoords = () => dispatch => {
+	const geolocation = navigator.geolocation;
 	if (geolocation) {
 		let errorMessage = '';
+		let lat;
+		let lng;
 		geolocation.getCurrentPosition(
-			async position => {
-				const lat = await position.coords.latitude;
-				const lng = await position.coords.longitude;
+			function(position) {
+				lat =  position.coords.latitude;
+				lng = position.coords.longitude;
 				dispatch({ type: GET_COORDS, payload: { lat: lat, lng: lng, errorMessage: errorMessage } });
 			},
-			async err => {
+			async function(err) {
 				if (err.code === 1 ) {
-					errorMessage = await "Location denied. Please enable location services.";
+					errorMessage = err.message;
 					dispatch({ type: GEOLOCATION_DENIED, payload: {lat: null, lng: null, errorMessage: errorMessage} });
 				};
 				if (err.code === 2 ) {
-					errorMessage = await "Unable to find position - locaiton services unavailable.";
+					errorMessage = err.message;
 					dispatch({ type: GEOLOCATION_DENIED, payload: { lat: null, lng: null, errorMessage: errorMessage } });
 				};
 				if (err.code === 3 ) {
-					errorMessage = await "Unable to find position - location services timed out.";
+					errorMessage = err.message;
 					dispatch({ type: GEOLOCATION_DENIED, payload: { lat: null, lng: null, errorMessage: errorMessage } });
 				};
 			}
@@ -100,12 +102,11 @@ export const postComment = (formValues) => async dispatch => {
 	}
 }
 
-export const showRestaurantComments = (place_id) => async (dispatch, getState ) => {
-	// const place_id = getState().restaurant.place_id;
+export const showRestaurantComments = (place_id) => async dispatch => {
 	const response = await comments.get(`/restaurants/${place_id}`)
-	if (response.status === 200) {
-		const { data } = response;
-		dispatch({ type: SHOW_RESTAURANT_COMMENTS, payload: data });
+	if (response.ok) {
+		const { restaurant } = response;
+		dispatch({ type: SHOW_RESTAURANT_COMMENTS, payload: restaurant });
 	}
 }
 

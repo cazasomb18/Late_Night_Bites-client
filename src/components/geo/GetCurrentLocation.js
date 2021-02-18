@@ -5,7 +5,6 @@ import Spinner from './Spinner';
 import { getCoords } from '../../actions';
 
 class GetCurrentLocation extends React.Component {
-
 	componentDidMount(){
 		this.props.getCoords();
 	}

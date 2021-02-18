@@ -6,7 +6,7 @@ import {
 	logOut, 
 	registerUser, 
 	toggleRegisterForm, 
-	toggleLogInForm 
+	toggleLogInForm
 } from '../../actions';
 import AuthForm from './AuthForm';
 import LoginForm from './LoginForm';
@@ -109,6 +109,6 @@ export default connect(
 		logOut,
 		registerUser,
 		toggleRegisterForm,
-		toggleLogInForm 
+		toggleLogInForm
 	}
 )(Auth);

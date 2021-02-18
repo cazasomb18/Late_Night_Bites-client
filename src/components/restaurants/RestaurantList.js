@@ -13,7 +13,6 @@ class RestaurantList extends React.Component {
 		if (this.props.isLoggedIn && this.props.lat && this.props.lng) {
 			return (
 				<div className="ui list">
-					<h2 className="ui header">Late Restaurants List</h2>
 					<RenderList/>
 				</div>
 			); 

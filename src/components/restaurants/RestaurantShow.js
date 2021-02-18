@@ -5,14 +5,16 @@ import { showRestaurantComments } from '../../actions';
 
 class RestaurantShow extends React.Component {
 	componentDidMount(){
-		this.props.showRestaurantComments(this.props.restaurant.place_id)
-
+		if (this.props.place_id !== undefined){
+			this.props.showRestaurantComments(this.props.place_id);
+		}
 	}
 
-	renderRestaurant = () => {
-		console.log("ARE WE DOING THIS?")
+	renderRestaurant = props => {
 		return (
-			<div>{this.props.restaurant}</div>
+			<div>
+				<h2>{this.props.restaurant.name}</h2>
+			</div>
 		)
 	}
 
@@ -20,7 +22,7 @@ class RestaurantShow extends React.Component {
 		console.log(this.props);
 		return (
 			<div>
-				<h1>RESTAURANT SHOW</h1>
+				<h2 className="ui header">Restaurant Show</h2>
 			</div>
 		); 
 	}
@@ -29,7 +31,7 @@ class RestaurantShow extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		restaurant: state.restaurant
+		comments: state.restaurant,
 	}
 };
 
