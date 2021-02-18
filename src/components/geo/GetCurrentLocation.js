@@ -17,7 +17,7 @@ class GetCurrentLocation extends React.Component {
 		if (!this.props.errorMessage && this.props.lat && this.props.lng) {
 			return;
 		}
-		return <Spinner message={this.props.errorMessage} />
+		return <Spinner message={"Finding GPS position..."} />
 	}
 
 	render(){

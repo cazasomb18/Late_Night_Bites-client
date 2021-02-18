@@ -10,3 +10,12 @@
 .content button {
 	float: right;
 }
+
+.buttoncontainer {
+	display: flex;
+	justify-content: space-between;
+}
+
+.button-item {
+
+}

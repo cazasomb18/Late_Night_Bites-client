@@ -1,5 +1,6 @@
 import auth from '../apis/auth';
 import restaurants from '../apis/restaurants';
+import comments from '../apis/comments';
 import {
 	LOG_IN,
 	LOG_OUT,
@@ -11,7 +12,8 @@ import {
 	TOGGLE_LOGIN, 
 	GET_PHOTOS,
 	POST_COMMENT,
-	GET_USER_RESTAURANTS
+	GET_USER_RESTAURANTS,
+	SHOW_RESTAURANT_COMMENTS
 } from './types';
 
 export const registerUser = formValues => async dispatch => {
@@ -67,7 +69,7 @@ export const getCoords = () => async dispatch => {
 
 export const getRestaurants = () => async (dispatch, getState) =>  {
 	const { lat, lng } = await getState().coords;
-	const response = await restaurants.get(`/nearby?searchTerm=${lat},${lng}`);
+	const response = await restaurants.get('/nearby?searchTerm=' + lat + ',' + lng);
 	if (response.status === 200) {
 		const restaurants = response.data;
 		dispatch({ type: RENDER_LIST, payload: restaurants });
@@ -84,22 +86,32 @@ export const toggleLogInForm = () => dispatch => {
 
 export const getPhotos = () => async (dispatch, getState) => {
 	const { lat, lng } = await getState().coords;
-	const response = await restaurants.get('/nearby?SearchTerm=' + lat + ',' + lng);
+	const response = await restaurants.get('/nearby?searchTerm=' + lat + ',' + lng);
 	if (response.status === 200) {
 		const photos = response.photos;
 		dispatch({ type: GET_PHOTOS, payload: photos })
 	}
 }
 
-export const postComment = (formValues) => async (dispatch, getState) => {
+export const postComment = (formValues) => async dispatch => {
 	const response = await restaurants.post(`/${formValues.place_id}/comment`, {...formValues});
 	if (response.status === 200) {
 		dispatch({ type: POST_COMMENT, payload: response.data });
 	}
 }
 
+export const showRestaurantComments = (place_id) => async (dispatch, getState ) => {
+	// const place_id = getState().restaurant.place_id;
+	const response = await comments.get(`/restaurants/${place_id}`)
+	if (response.status === 200) {
+		const { data } = response;
+		dispatch({ type: SHOW_RESTAURANT_COMMENTS, payload: data });
+	}
+}
+
+
 export const getUserRestaurantInfo = () => async (dispatch, getState) => {
-	const id = getState().auth._id;
+	const id = getState().auth.user._id;
 	const response = await auth.get(`/usercomments/${id}`);
 	if (response.status === 200) {
 		dispatch({ type: GET_USER_RESTAURANTS, payload: response.data })

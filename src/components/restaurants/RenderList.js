@@ -6,6 +6,7 @@ import MapContainer from '../map/MapContainer';
 import { getRestaurants } from '../../actions';
 import PostComments from '../comments/PostComments';
 import Spinner from '../geo/Spinner';
+import RestaurantShow from './RestaurantShow';
 import './restaurants.css';
 
 class RenderList extends React.Component {
@@ -13,6 +14,7 @@ class RenderList extends React.Component {
 		super(props);
 		this.state = {
 			addingComment: false,
+			viewingRestaurant: false,
 			targetRestaurant: null
 		}
 	}
@@ -33,20 +35,26 @@ class RenderList extends React.Component {
 						<div className="item" key={restaurant.place_id}>
 							<h3>{restaurant.name}</h3>
 							<div className="content">
-								{/*<img href={'/'} alt="source unavailable"/>*/}
 								<h5 className="ui header">{address}</h5>
 								<div className="ui label content">
 									<h5>Rating: {starsIcons}</h5>
 									<h5>Price: {dollarIcons}</h5>
 									<h5>Total reviews: {restaurant.user_ratings_total}</h5>
 								</div>
-								{/*<p>{photoReference}</p>*/}
-								<button 
-									className="ui primary button content" 
-									onClick={this.toggleCommentView} 
-									id={index}
-								>Add Comment
-								</button>
+								<p>{photoReference}</p>
+								<div className="buttoncontainer">
+									<button
+										className="button-item ui primary button content"
+										onClick={this.toggleRestaurantView}
+										id={index}
+									>RESTAURANT SHOW</button>
+									<button 
+										className="button-item ui primary button content" 
+										onClick={this.toggleCommentView} 
+										id={index}
+									>Add Comment
+									</button>
+								</div>
 							</div>
 						</div>
 					);
@@ -72,8 +80,55 @@ class RenderList extends React.Component {
 		};
 	}
 
+	toggleRestaurantView = (e, id) => {
+		if (!this.state.viewingRestaurant){
+			this.setState({
+				viewingRestaurant: true,
+				targetRestaurant: this.props.restaurants.data.results[e.currentTarget.id]
+			})
+		};
+		if (this.state.viewingRestaurant) {
+			this.setState({
+				viewingRestaurant: false,
+				targetRestaurant: null
+			})
+		}
+	}
+
 	renderComponent = () => {
-		if (!this.state.addingComment){
+		if (this.state.addingComment) {
+			return (
+				<div>
+					<PostComments 
+						restaurant={this.state.targetRestaurant} 
+						toggleCommentView={this.toggleCommentView}
+					/>
+					<button 
+						style={{float: "right"}}
+						className="ui red button"
+						onClick={this.toggleCommentView} 
+					>Exit
+					</button>
+				</div>
+			);
+		}
+		if (this.state.viewingRestaurant) {
+			return (
+				<div>
+					<RestaurantShow
+						restaurant={this.state.targetRestaurant}
+						toggleRestaurantView={this.toggleRestaurantView}
+					/>
+					<button
+						style={{float: "right"}} 
+						className="ui red button" 
+						onClick={this.toggleRestaurantView}
+					>Exit
+					</button>
+				</div>
+			);
+		}
+		if (!this.state.viewingRestaurant && !this.state.addingComment){
 			return (
 				<div>
 					<div className="ui list">
@@ -81,23 +136,12 @@ class RenderList extends React.Component {
 					</div>
 					<MapContainer/>
 				</div>
-			)
-		} return (
-			<div>
-				<PostComments 
-					restaurant={this.state.targetRestaurant} 
-					toggleCommentView={this.toggleCommentView}
-				/>
-				<button 
-					className="ui red button"
-					onClick={this.toggleCommentView} 
-				>Exit
-				</button>
-			</div>
-		);
+			) 
+		}
 	}
 
 	render(){
+		console.log(this.props);
 		return <div>{this.renderComponent()}</div>;
 	}
 }
