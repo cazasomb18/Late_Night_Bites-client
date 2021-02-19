@@ -2,19 +2,20 @@ import auth from '../apis/auth';
 import restaurants from '../apis/restaurants';
 import comments from '../apis/comments';
 import {
+	GET_COORDS,
+	GET_RESTAURANT,
+	GET_USER_RESTAURANTS,
+	GEOLOCATION_DENIED,
+	HIDE_COMMENT_FORM,
 	LOG_IN,
 	LOG_OUT,
-	REGISTER_USER,
-	GET_COORDS,
-	GEOLOCATION_DENIED,
-	RENDER_LIST,
-	TOGGLE_REGISTER,
-	TOGGLE_LOGIN, 
-	GET_PHOTOS,
 	POST_COMMENT,
-	GET_USER_RESTAURANTS,
+	REGISTER_USER,
+	RENDER_LIST,
 	SHOW_RESTAURANT_COMMENTS,
-	GET_RESTAURANT
+	SHOW_COMMENT_FORM,
+	TOGGLE_LOGIN,
+	TOGGLE_REGISTER
 } from './types';
 
 export const registerUser = formValues => async dispatch => {
@@ -87,12 +88,21 @@ export const toggleLogInForm = () => dispatch => {
 	dispatch({ type: TOGGLE_LOGIN })
 }
 
-export const getPhotos = () => async (dispatch, getState) => {
-	const { lat, lng } = await getState().coords;
-	const response = await restaurants.get('/nearby?searchTerm=' + lat + ',' + lng);
-	if (response.status === 200) {
-		const photos = response.photos;
-		dispatch({ type: GET_PHOTOS, payload: photos })
+export const showCommentForm = () => dispatch => {
+	dispatch({ type: SHOW_COMMENT_FORM })
+}
+
+export const hideCommentForm = () => dispatch => {
+	dispatch({ type: HIDE_COMMENT_FORM })
+}
+
+export const toggleCommentForm = () => async (dispatch, getState) => {
+	const { addingComment } = await getState().restaurant;
+	if (addingComment) {
+		dispatch({ type: HIDE_COMMENT_FORM })
+	}
+	if (!addingComment) {
+		dispatch({ type: SHOW_COMMENT_FORM })
 	}
 }
 
@@ -114,8 +124,8 @@ export const getRestaurant = (place_id) => async dispatch => {
 
 export const showRestaurantComments = () => async (dispatch, getState) => {
 	const { place_id } = await getState().restaurant.targetRestaurant;
-	const response = await comments.get('/restaurants/' + place_id);
-	if (response.ok === true) {
+	const response = await comments.get(`/restaurant/${place_id}`);
+	if (response.ok) {
 		const { restaurant } = await response;
 		dispatch({ type: SHOW_RESTAURANT_COMMENTS, payload: restaurant });
 	}

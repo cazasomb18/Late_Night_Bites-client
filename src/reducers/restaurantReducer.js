@@ -1,10 +1,13 @@
 import { 
 	POST_COMMENT, 
 	SHOW_RESTAURANT_COMMENTS,
-	GET_RESTAURANT
+	GET_RESTAURANT,
+	SHOW_COMMENT_FORM,
+	HIDE_COMMENT_FORM
 } from '../actions/types';
 
 const INITIAL_STATE = {
+	addingComment: false,
 	targetRestaurant: '',
 	newRestaurant: '',
 	comments: '',
@@ -13,6 +16,16 @@ const INITIAL_STATE = {
 
 const restaurantReducer = (state=INITIAL_STATE, action ) => {
 	switch(action.type) {
+		case SHOW_COMMENT_FORM:
+			return {
+				...state,
+				addingComment: true
+			}
+		case HIDE_COMMENT_FORM:
+			return {
+				...state,
+				addingComment: false
+			}
 		case POST_COMMENT:
 			return {
 				...state,

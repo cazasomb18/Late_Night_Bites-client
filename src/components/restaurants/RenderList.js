@@ -25,7 +25,7 @@ class RenderList extends React.Component {
 		if (this.props.restaurants.ok) {
 			return this.props.restaurants.data.results.map( (restaurant, index) => {
 				const address = restaurant.vicinity + ", " + restaurant.plus_code.compound_code.split(',')[1].split();
-				const photoReference = restaurant.photos[0].photo_reference;
+				// const photoReference = restaurant.photos[0].photo_reference;
 				const dollarIcons = _(restaurant.price_level).times(i => <i className="dollar sign icon" key={i}></i>);
 				const starsIcons = _(Math.floor(restaurant.rating)).times(i => <i className="star outline icon" key={i}></i>);
 				if (restaurant.business_status === "OPERATIONAL") {
@@ -39,7 +39,6 @@ class RenderList extends React.Component {
 									<h5>Price: {dollarIcons}</h5>
 									<h5>Total reviews: {restaurant.user_ratings_total}</h5>
 								</div>
-								<p>{photoReference}</p>
 								<div className="buttoncontainer">
 									<button
 										className="button-item ui primary button content"
@@ -87,7 +86,7 @@ class RenderList extends React.Component {
 		if (!this.state.viewingRestaurant){
 			return (
 				<div>
-					<h2 className="ui header">Late Restaurants List</h2>
+					<h1 className="ui header">Restaurant List</h1>
 					<div className="ui list">
 						{this.renderList()}
 					</div>
@@ -108,8 +107,7 @@ const mapStateToProps = state => {
 		lng: state.coords.lng,
 		restaurants: state.restaurants,
 		user: state.auth.user
-	}
-	
+	}	
 };
 
 export default connect(
