@@ -13,7 +13,8 @@ import {
 	GET_PHOTOS,
 	POST_COMMENT,
 	GET_USER_RESTAURANTS,
-	SHOW_RESTAURANT_COMMENTS
+	SHOW_RESTAURANT_COMMENTS,
+	GET_RESTAURANT
 } from './types';
 
 export const registerUser = formValues => async dispatch => {
@@ -102,10 +103,20 @@ export const postComment = (formValues) => async dispatch => {
 	}
 }
 
-export const showRestaurantComments = (place_id) => async dispatch => {
-	const response = await comments.get(`/restaurants/${place_id}`)
-	if (response.ok) {
-		const { restaurant } = response;
+
+export const getRestaurant = (place_id) => async dispatch => {
+	const response = await restaurants.get(`/${place_id}`);
+	if (response.status === 200) {
+		const restaurant = response.data;
+		dispatch({  type: GET_RESTAURANT, payload: restaurant });
+	}
+}
+
+export const showRestaurantComments = () => async (dispatch, getState) => {
+	const { place_id } = await getState().restaurant.targetRestaurant;
+	const response = await comments.get('/restaurants/' + place_id);
+	if (response.ok === true) {
+		const { restaurant } = await response;
 		dispatch({ type: SHOW_RESTAURANT_COMMENTS, payload: restaurant });
 	}
 }

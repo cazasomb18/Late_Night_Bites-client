@@ -26,6 +26,12 @@ class PostComments extends React.Component {
 					userId={this.props.userId} 
 					toggleCommentView={this.props.toggleCommentView}
 				/>
+				<button 
+					style={{float: "right"}}
+					className="ui red button"
+					onClick={this.props.toggleCommentView} 
+				>Exit
+				</button>
 			</div>
 		);
 	}

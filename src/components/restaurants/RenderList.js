@@ -4,7 +4,6 @@ import _ from 'lodash';
 
 import MapContainer from '../map/MapContainer';
 import { getRestaurants, showRestaurantComments } from '../../actions';
-import PostComments from '../comments/PostComments';
 import Spinner from '../geo/Spinner';
 import RestaurantShow from './RestaurantShow';
 import './restaurants.css';
@@ -13,7 +12,6 @@ class RenderList extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			addingComment: false,
 			viewingRestaurant: false,
 			targetRestaurant: null
 		}
@@ -24,11 +22,7 @@ class RenderList extends React.Component {
 	}
 
 	renderList = props => {
-<<<<<<< HEAD
-		if (this.props.restaurants.ok === true) {
-=======
 		if (this.props.restaurants.ok) {
->>>>>>> css1
 			return this.props.restaurants.data.results.map( (restaurant, index) => {
 				const address = restaurant.vicinity + ", " + restaurant.plus_code.compound_code.split(',')[1].split();
 				const photoReference = restaurant.photos[0].photo_reference;
@@ -52,12 +46,6 @@ class RenderList extends React.Component {
 										onClick={this.toggleRestaurantView}
 										id={index}
 									>RESTAURANT SHOW</button>
-									<button 
-										className="button-item ui primary button content" 
-										onClick={this.toggleCommentView} 
-										id={index}
-									>Add Comment
-									</button>
 								</div>
 							</div>
 						</div>
@@ -67,21 +55,6 @@ class RenderList extends React.Component {
 			})
 		} 
 		return <Spinner message="Finding Late Night Bites"/>;
-	}
-
-	toggleCommentView = (e, id) => {
-		if (!this.state.addingComment){
-			this.setState({
-				addingComment: true,
-				targetRestaurant: this.props.restaurants.data.results[e.currentTarget.id]
-			})
-		};
-		if (this.state.addingComment){
-			this.setState({
-				addingComment: false,
-				targetRestaurant: null
-			})
-		};
 	}
 
 	toggleRestaurantView = (e, id) => {
@@ -100,45 +73,18 @@ class RenderList extends React.Component {
 	}
 
 	renderComponent = () => {
-		if (this.state.addingComment) {
-			return (
-				<div>
-					<PostComments 
-						restaurant={this.state.targetRestaurant} 
-						toggleCommentView={this.toggleCommentView}
-					/>
-					<button 
-						style={{float: "right"}}
-						className="ui red button"
-						onClick={this.toggleCommentView} 
-					>Exit
-					</button>
-				</div>
-			);
-		}
 		if (this.state.viewingRestaurant) {
 			return (
 				<div>
 					<RestaurantShow
-<<<<<<< HEAD
 						place_id={this.state.targetRestaurant.place_id} 
 						restaurant={this.state.targetRestaurant}
-=======
-						restaurant={this.state.targetRestaurant} 
-						place_id={this.state.targetRestaurant.place_id} 
->>>>>>> css1
 						toggleRestaurantView={this.toggleRestaurantView}
 					/>
-					<button
-						style={{float: "right"}} 
-						className="ui red button" 
-						onClick={this.toggleRestaurantView}
-					>Exit
-					</button>
 				</div>
 			);
 		}
-		if (!this.state.viewingRestaurant && !this.state.addingComment){
+		if (!this.state.viewingRestaurant){
 			return (
 				<div>
 					<h2 className="ui header">Late Restaurants List</h2>
