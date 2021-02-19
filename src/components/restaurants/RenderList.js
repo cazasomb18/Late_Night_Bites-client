@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import MapContainer from '../map/MapContainer';
-import { getRestaurants } from '../../actions';
+import { getRestaurants, showRestaurantComments } from '../../actions';
 import PostComments from '../comments/PostComments';
 import Spinner from '../geo/Spinner';
 import RestaurantShow from './RestaurantShow';
@@ -24,7 +24,11 @@ class RenderList extends React.Component {
 	}
 
 	renderList = props => {
+<<<<<<< HEAD
 		if (this.props.restaurants.ok === true) {
+=======
+		if (this.props.restaurants.ok) {
+>>>>>>> css1
 			return this.props.restaurants.data.results.map( (restaurant, index) => {
 				const address = restaurant.vicinity + ", " + restaurant.plus_code.compound_code.split(',')[1].split();
 				const photoReference = restaurant.photos[0].photo_reference;
@@ -116,8 +120,13 @@ class RenderList extends React.Component {
 			return (
 				<div>
 					<RestaurantShow
+<<<<<<< HEAD
 						place_id={this.state.targetRestaurant.place_id} 
 						restaurant={this.state.targetRestaurant}
+=======
+						restaurant={this.state.targetRestaurant} 
+						place_id={this.state.targetRestaurant.place_id} 
+>>>>>>> css1
 						toggleRestaurantView={this.toggleRestaurantView}
 					/>
 					<button
@@ -159,5 +168,5 @@ const mapStateToProps = state => {
 
 export default connect(
 	mapStateToProps,
-	{ getRestaurants }
+	{ getRestaurants, showRestaurantComments }
  )(RenderList);
