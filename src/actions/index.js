@@ -4,16 +4,18 @@ import comments from '../apis/comments';
 import {
 	GET_COORDS,
 	GET_RESTAURANT,
+	GET_RESTAURANT_COMMENTS,
 	GET_USER_RESTAURANTS,
 	GEOLOCATION_DENIED,
 	HIDE_COMMENT_FORM,
+	HIDE_RESTAURANT,
 	LOG_IN,
 	LOG_OUT,
 	POST_COMMENT,
 	REGISTER_USER,
 	RENDER_LIST,
-	SHOW_RESTAURANT_COMMENTS,
 	SHOW_COMMENT_FORM,
+	SHOW_RESTAURANT,
 	TOGGLE_LOGIN,
 	TOGGLE_REGISTER
 } from './types';
@@ -26,6 +28,7 @@ export const registerUser = formValues => async dispatch => {
 	}
 }
 
+
 export const logIn = formValues => async dispatch => {
 	const response = await auth.post('/login', { ...formValues});
 	if (response.status === 200) {
@@ -34,12 +37,14 @@ export const logIn = formValues => async dispatch => {
 	}
 }
 
+
 export const logOut = () => async dispatch => {
 	const response = await auth.get('/logout');
 	if (response.status === 200) {
 		dispatch({ type: LOG_OUT });
 	}
 }
+
 
 export const getCoords = () => dispatch => {
 	const geolocation = navigator.geolocation;
@@ -56,7 +61,7 @@ export const getCoords = () => dispatch => {
 			async function(err) {
 				if (err.code === 1 ) {
 					errorMessage = err.message;
-					dispatch({ type: GEOLOCATION_DENIED, payload: {lat: null, lng: null, errorMessage: errorMessage} });
+					dispatch({ type: GEOLOCATION_DENIED, payload: { lat: null, lng: null, errorMessage: errorMessage } });
 				};
 				if (err.code === 2 ) {
 					errorMessage = err.message;
@@ -71,6 +76,7 @@ export const getCoords = () => dispatch => {
 	}	
 }
 
+
 export const getRestaurants = () => async (dispatch, getState) =>  {
 	const { lat, lng } = await getState().coords;
 	const response = await restaurants.get('/nearby?searchTerm=' + lat + ',' + lng);
@@ -80,21 +86,16 @@ export const getRestaurants = () => async (dispatch, getState) =>  {
 	}
 }
 
+
 export const toggleRegisterForm = () => dispatch => {
 	dispatch({ type: TOGGLE_REGISTER })
 }
+
 
 export const toggleLogInForm = () => dispatch => {
 	dispatch({ type: TOGGLE_LOGIN })
 }
 
-export const showCommentForm = () => dispatch => {
-	dispatch({ type: SHOW_COMMENT_FORM })
-}
-
-export const hideCommentForm = () => dispatch => {
-	dispatch({ type: HIDE_COMMENT_FORM })
-}
 
 export const toggleCommentForm = () => async (dispatch, getState) => {
 	const { addingComment } = await getState().restaurant;
@@ -105,6 +106,18 @@ export const toggleCommentForm = () => async (dispatch, getState) => {
 		dispatch({ type: SHOW_COMMENT_FORM })
 	}
 }
+
+
+export const toggleRestaurantView = () => async (dispatch, getState) => {
+	const { viewingRestaurant } = await getState().restaurants;
+	if (viewingRestaurant) {
+		dispatch({ type: HIDE_RESTAURANT })
+	}
+	if (!viewingRestaurant) {
+		dispatch({ type: SHOW_RESTAURANT })
+	}
+}
+
 
 export const postComment = (formValues) => async dispatch => {
 	const response = await restaurants.post(`/${formValues.place_id}/comment`, {...formValues});
@@ -122,12 +135,13 @@ export const getRestaurant = (place_id) => async dispatch => {
 	}
 }
 
-export const showRestaurantComments = () => async (dispatch, getState) => {
+
+export const getRestaurantComments = () => async (dispatch, getState) => {
 	const { place_id } = await getState().restaurant.targetRestaurant;
 	const response = await comments.get(`/restaurant/${place_id}`);
-	if (response.ok) {
-		const { restaurant } = await response;
-		dispatch({ type: SHOW_RESTAURANT_COMMENTS, payload: restaurant });
+	if (response.status === 200) {
+		const restaurant = response.data;
+		dispatch({ type: GET_RESTAURANT_COMMENTS, payload: restaurant });
 	}
 }
 
@@ -138,4 +152,9 @@ export const getUserRestaurantInfo = () => async (dispatch, getState) => {
 	if (response.status === 200) {
 		dispatch({ type: GET_USER_RESTAURANTS, payload: response.data })
 	}
+}
+
+
+export const deleteRestaurantComments = () => async (dispatch, getState) => {
+	const { place_id } = await getState().restaurant.targetRestaurant;
 }

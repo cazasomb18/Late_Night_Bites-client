@@ -12,7 +12,6 @@ class PostComments extends React.Component {
 	render(){
 		return (
 			<div>
-				<h3 className="ui header">Adding Comment View</h3>
 				<CommentForm 
 					initialValues={{
 						name: _.pick(this.props.restaurant, 'name'),
@@ -39,6 +38,7 @@ class PostComments extends React.Component {
 
 const mapStateToProps = state => {
 	return {
+		addingComment: state.restaurant.addingComment,
 		userName: state.auth.userName,
 		userId: state.auth.user._id,
 		user: state.auth.user

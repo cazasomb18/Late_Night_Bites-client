@@ -57,8 +57,8 @@ const authReducer = (state = INITIAL_STATE, action) => {
 		case GET_USER_RESTAURANTS:
 			return {
 				...state,
-				restaurants: action.payload.foundRestaurants,
-				comments: action.payload.foundComments
+				comments: [...action.payload.data.comments],
+				restaurants: [...action.payload.data.restaurants]
 
 			}
 		default: 

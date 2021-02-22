@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import MapContainer from '../map/MapContainer';
-import { getRestaurants, showRestaurantComments } from '../../actions';
+import { getRestaurants, toggleRestaurantView, getRestaurant } from '../../actions';
 import Spinner from '../geo/Spinner';
 import RestaurantShow from './RestaurantShow';
 import './restaurants.css';
@@ -21,11 +21,11 @@ class RenderList extends React.Component {
 		this.props.getRestaurants();
 	}
 
-	renderList = props => {
-		if (this.props.restaurants.ok) {
-			return this.props.restaurants.data.results.map( (restaurant, index) => {
+	renderList = (props) => {
+		if (this.props.restaurants) {
+			return this.props.restaurants.map( (restaurant, index) => {
 				const address = restaurant.vicinity + ", " + restaurant.plus_code.compound_code.split(',')[1].split();
-				// const photoReference = restaurant.photos[0].photo_reference;
+				const photoReference = restaurant.photos[0].photo_reference;
 				const dollarIcons = _(restaurant.price_level).times(i => <i className="dollar sign icon" key={i}></i>);
 				const starsIcons = _(Math.floor(restaurant.rating)).times(i => <i className="star outline icon" key={i}></i>);
 				if (restaurant.business_status === "OPERATIONAL") {
@@ -56,16 +56,34 @@ class RenderList extends React.Component {
 		return <Spinner message="Finding Late Night Bites"/>;
 	}
 
-	toggleRestaurantView = (e, id) => {
+	toggleRestaurantView = async (e, id) => {
 		if (!this.state.viewingRestaurant){
 			this.setState({
 				viewingRestaurant: true,
-				targetRestaurant: this.props.restaurants.data.results[e.currentTarget.id]
+				targetRestaurant: this.props.restaurants[e.currentTarget.id]
 			})
-		};
+		}
 		if (this.state.viewingRestaurant) {
 			this.setState({
 				viewingRestaurant: false,
+				targetRestaurant: null
+			})
+		}
+	}
+
+	toggleRestaurantShow = async (e, id, place_id) => {
+		const restaurant = await this.props.getRestaurant(place_id);
+		if (restaurant) {	
+			this.props.toggleRestaurantView();
+		}
+		if (this.props.viewingRestaurant){
+			this.setState({
+				targetRestaurant: this.props.restaurants[e.currentTarget.id]
+			})
+		}
+		if (!this.props.viewingRestaurant){
+			this.props.toggleRestaurantView();
+			this.setState({
 				targetRestaurant: null
 			})
 		}
@@ -76,7 +94,7 @@ class RenderList extends React.Component {
 			return (
 				<div>
 					<RestaurantShow
-						place_id={this.state.targetRestaurant.place_id} 
+						place_id={this.state.targetRestaurant.place_id}
 						restaurant={this.state.targetRestaurant}
 						toggleRestaurantView={this.toggleRestaurantView}
 					/>
@@ -97,7 +115,7 @@ class RenderList extends React.Component {
 	}
 
 	render(){
-		return <div>{this.renderComponent()}</div>;
+		return <div>{this.renderComponent()}</div>
 	}
 }
 
@@ -105,12 +123,14 @@ const mapStateToProps = state => {
 	return {
 		lat: state.coords.lat,
 		lng: state.coords.lng,
-		restaurants: state.restaurants,
-		user: state.auth.user
+		restaurants: state.restaurants.list.results,
+		targetRestaurant: state.restaurant.targetRestaurant,
+		user: state.auth.user,
+		viewingRestaurant: state.restaurants.viewingRestaurant
 	}	
 };
 
 export default connect(
 	mapStateToProps,
-	{ getRestaurants, showRestaurantComments }
+	{ getRestaurants, toggleRestaurantView, getRestaurant }
  )(RenderList);

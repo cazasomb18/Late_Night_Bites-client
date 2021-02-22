@@ -6,12 +6,12 @@ import { getUserRestaurantInfo } from '../../actions';
 class Dashboard extends React.Component {
 
 	componentDidMount(){
-		// if (this.props.userRestaurants && this.props.userComments) {
-		// 	this.props.getUserRestaurantInfo();
-		// }
+		if (this.props.loggedIn) {
+			this.props.getUserRestaurantInfo();
+		}
 	}
 	render(){
-		// console.log(this.props);
+		// console.log("DASH PROPS: \n", this.props);
 		return(
 			<div>
 				Dashboard.js
@@ -23,9 +23,10 @@ class Dashboard extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		userComments: state.auth.user.comments,
-		userRestaurants: state.auth.user.restaurants,
-		userName: state.auth.user.userName
+		user: state.auth.user,
+		loggedIn: state.auth.isLoggedIn,
+		comments: state.auth.comments,
+		restaurants: state.auth.restaurants
 	}
 };
 

@@ -10,7 +10,7 @@ mapboxgl.accessToken = process.env.REACT_APP_MB_TOKEN;
 
 const MapContainer = props => {
 	const mapContainerRef = useRef(null);
-	const restCoords = props.restaurants.resultLatLng;
+	const restCoords = props.restaurants.resLatLng;
 	const lat = props.lat;
 	const lng = props.lng;
 

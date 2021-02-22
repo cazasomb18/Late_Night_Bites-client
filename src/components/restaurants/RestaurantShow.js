@@ -1,23 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import PostComments from '../comments/PostComments';
-import CommentButton from '../comments/CommentButton';
+import CommentButtons from '../comments/CommentButtons';
 import ComponentTitle from './ComponentTitle';
+import PostComments from '../comments/PostComments';
+import RenderComments from '../comments/RenderComments';
 import { 
-	showRestaurantComments, 
 	getRestaurant, 
 	toggleCommentForm 
 } from '../../actions';
 
 class RestaurantShow extends React.Component {
-	constructor(props){
-		super(props);
-		this.state = {
-			addingComment: false,
-			targetRestaurant: null
-		}
-	}
+
 	componentDidMount(){
 		this.props.getRestaurant(this.props.place_id);
 	}
@@ -33,7 +27,31 @@ class RestaurantShow extends React.Component {
 				</div>
 			)
 		}
-		if (this.props.reducerRestaurant && !this.props.addingComment) {
+		if (this.props.reducerRestaurant) {
+			return <div>{this.renderReducerRestaurant()}</div>
+		}
+		if (!this.props.reducerRestaurant){
+			return <div>{this.renderListRestaurant()}</div>
+		}
+	}
+
+	renderListRestaurant = (props) => {
+		if (!this.props.reducerRestaurant){
+			return (
+				<div>
+					<i className="huge utensils icon"></i>
+					<h2 className="ui headline">{this.props.restaurant.name}</h2>
+					<CommentButtons
+						toggleCommentView={this.toggleCommentView}
+						toggleRestaurantView={this.props.toggleRestaurantView} 
+					/>
+				</div>
+			)
+		}
+	}
+
+	renderReducerRestaurant = (props) => {
+		if (this.props.reducerRestaurant){
 			return (
 				<div className="ui list">
 					<i className="huge utensils icon"></i>
@@ -42,65 +60,17 @@ class RestaurantShow extends React.Component {
 					<h3 className="ui headline">{this.props.reducerRestaurant.place_id}</h3>
 					<div className="ui sizer vertical segment">
 						<h4 className="ui medium header">Comments</h4>
+						<RenderComments/>
 						<div className="ui list">
-							{this.renderComments()}
+							<CommentButtons 
+								toggleCommentView={this.toggleCommentView}
+								toggleRestaurantView={this.props.toggleRestaurantView}
+							/>
 						</div>
 					</div>
-					<button
-						style={{float: "right"}} 
-						className="ui red button" 
-						onClick={this.props.toggleRestaurantView}
-					>Exit
-					</button>
 				</div>
 			)
 		}
-		if (!this.props.reducerRestaurant && !this.props.addingComment){
-			return (
-				<div>
-					<i className="huge utensils icon"></i>
-					<h2 className="ui headline">{this.props.restaurant.name}</h2>
-					{this.renderComments()}
-					<button
-						style={{float: "right"}} 
-						className="ui red button" 
-						onClick={this.props.toggleRestaurantView}
-					>Exit to List
-					</button>
-				</div>
-			);
-		}
-	}
-
-	renderComments = (props)=> {
-		if (!this.props.reducerRestaurant){
-			return(
-				<div>
-					<h4 className="semantic ui headline">NO MONGO DB ENTRY FOR THIS RESTAURANT</h4>
-					<CommentButton
-						toggleCommentView={this.toggleCommentView}
-					/>
-				</div>
-			) 
-		};
-		if (this.props.reducerRestaurant){
-
-			this.props.showRestaurantComments();
-
-			if (this.props.comments.length > 1) {
-				return<div>COMMENTS GREATER THAN 1</div>;
-			};
-			if (!this.props.comments) {
-				return (
-					<div>
-						<h4 className="semantic ui headline">NO COMMENTS FOUND</h4>
-						<CommentButton
-							toggleCommentView={this.toggleCommentView}
-						/>
-					</div>
-				)
-			};
-		};
 	}
 
 	toggleCommentView = (props) => {
@@ -108,20 +78,20 @@ class RestaurantShow extends React.Component {
 	}
 
 	render(){
+		console.log(this.props);
 		return (
 			<div>
-				<h1 className="ui header">Restaurant Show</h1>
+				<ComponentTitle addingComment={this.props.addingComment}/>
 				{this.renderComponent()}
 			</div>
-		); 
+		);
 	}
-
 };
 
 const mapStateToProps = state => {
 	return {
 		addingComment: state.restaurant.addingComment,
-		comments: state.restaurant.comments,
+		comments: state.comments,
 		reducerRestaurant: state.restaurant.targetRestaurant
 	}
 };
@@ -130,7 +100,6 @@ const mapStateToProps = state => {
 export default connect(
 	mapStateToProps,
 	{ 
-		showRestaurantComments, 
 		getRestaurant, 
 		toggleCommentForm 
 	}
