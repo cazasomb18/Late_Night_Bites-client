@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import CommentButtons from '../comments/CommentButtons';
-import ComponentTitle from './ComponentTitle';
+import ComponentTitle from '../ComponentTitle';
 import PostComments from '../comments/PostComments';
 import RenderComments from '../comments/RenderComments';
 import { 
@@ -36,7 +36,7 @@ class RestaurantShow extends React.Component {
 	}
 
 	renderListRestaurant = (props) => {
-		if (!this.props.reducerRestaurant){
+		if (!this.props.reducerRestaurant) {
 			return (
 				<div>
 					<i className="huge utensils icon"></i>
@@ -78,7 +78,6 @@ class RestaurantShow extends React.Component {
 	}
 
 	render(){
-		console.log(this.props);
 		return (
 			<div>
 				<ComponentTitle addingComment={this.props.addingComment}/>

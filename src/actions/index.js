@@ -2,12 +2,16 @@ import auth from '../apis/auth';
 import restaurants from '../apis/restaurants';
 import comments from '../apis/comments';
 import {
+	DELETE_COMMENT,
+	EDIT_COMMENT,
 	GET_COORDS,
+	GET_COMMENT,
 	GET_RESTAURANT,
 	GET_RESTAURANT_COMMENTS,
 	GET_USER_RESTAURANTS,
 	GEOLOCATION_DENIED,
 	HIDE_COMMENT_FORM,
+	HIDE_COMMENT_EDIT_FORM,
 	HIDE_RESTAURANT,
 	LOG_IN,
 	LOG_OUT,
@@ -15,6 +19,7 @@ import {
 	REGISTER_USER,
 	RENDER_LIST,
 	SHOW_COMMENT_FORM,
+	SHOW_COMMENT_EDIT_FORM,
 	SHOW_RESTAURANT,
 	TOGGLE_LOGIN,
 	TOGGLE_REGISTER
@@ -98,12 +103,12 @@ export const toggleLogInForm = () => dispatch => {
 
 
 export const toggleCommentForm = () => async (dispatch, getState) => {
-	const { addingComment } = await getState().restaurant;
-	if (addingComment) {
-		dispatch({ type: HIDE_COMMENT_FORM })
+	const { editingComment } = await getState().comments;
+	if ( editingComment ) {
+		dispatch({ type: HIDE_COMMENT_EDIT_FORM })
 	}
-	if (!addingComment) {
-		dispatch({ type: SHOW_COMMENT_FORM })
+	if (!editingComment) {
+		dispatch({ type: SHOW_COMMENT_EDIT_FORM })
 	}
 }
 
@@ -154,7 +159,37 @@ export const getUserRestaurantInfo = () => async (dispatch, getState) => {
 	}
 }
 
-
-export const deleteRestaurantComments = () => async (dispatch, getState) => {
-	const { place_id } = await getState().restaurant.targetRestaurant;
+export const editComment = (place_id, comment_id, formValues) => async dispatch => {
+	const response = await comments.put(`/restaurant/${place_id}/${comment_id}`, {...formValues});
+	if (response.status === 200) {
+		dispatch({ type: EDIT_COMMENT, payload: response });
+	}
 }
+
+export const toggleEditCommentView = () => async (dispatch, getState) => {
+	const { editingComment } = await getState().comments.editingComment;
+	if (editingComment) {
+		dispatch({ type: HIDE_COMMENT_FORM })
+	}
+	if (!editingComment) {
+		dispatch({ type: SHOW_COMMENT_FORM })
+	}
+}
+
+
+export const deleteComment = id => async (dispatch, getState) => {
+	const { place_id } = await getState().restaurant.targetRestaurant;
+	const response = await comments.delete(`/restaurant/${place_id}/${id}`);
+	dispatch({ type: DELETE_COMMENT });
+}
+
+
+export const getComment = (id) => async dispatch => {
+	const response = await comments.get(`/${id}`);
+	if (response.status === 200) {
+		dispatch({ type: GET_COMMENT, payload: response.data });
+	}
+}
+
+
+
