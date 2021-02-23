@@ -23,12 +23,12 @@ class PostComments extends React.Component {
 					postComment={this.props.postComment} 
 					userName={this.props.userName} 
 					userId={this.props.userId} 
-					toggleCommentView={this.props.toggleCommentView}
+					toggleCommentForm={this.props.toggleCommentForm}
 				/>
 				<button 
 					style={{float: "right"}}
 					className="ui red button"
-					onClick={this.props.toggleCommentView} 
+					onClick={this.props.toggleCommentForm} 
 				>Exit
 				</button>
 			</div>
@@ -40,8 +40,7 @@ const mapStateToProps = state => {
 	return {
 		addingComment: state.restaurant.addingComment,
 		userName: state.auth.userName,
-		userId: state.auth.user._id,
-		user: state.auth.user
+		userId: state.auth.user._id
 	}
 };
 

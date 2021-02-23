@@ -15,7 +15,6 @@ class CommentEdit extends React.Component {
 			<div>
 				<EditCommentForm 
 					comment={this.props.comment} 
-					place_id={this.props.place_id}
 					editComment={this.props.editComment}
 				/>
 			</div>
@@ -25,9 +24,7 @@ class CommentEdit extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		...state,
-		comment: state.comment.targetComment,
-		place_id: state.restaurant.targetRestaurant.place_id
+		comment: state.comment.targetComment
 	}
 };
 

@@ -12,7 +12,7 @@ const restaurantsReducer = (state = INITIAL_STATE, action) => {
 		case RENDER_LIST:
 			return { 
 				...state, 
-				list: _.omit(action.payload.data, ['html_attributions']),
+				list: _.omit(action.payload.data, ['html_attributions', 'next_page_token']),
 				resLatLng: action.payload.resultLatLng
 			}
 		case SHOW_RESTAURANT:

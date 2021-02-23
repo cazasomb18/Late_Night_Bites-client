@@ -71,23 +71,23 @@ class RenderList extends React.Component {
 		}
 	}
 
-	toggleRestaurantShow = async (e, id, place_id) => {
-		const restaurant = await this.props.getRestaurant(place_id);
-		if (restaurant) {	
-			this.props.toggleRestaurantView();
-		}
-		if (this.props.viewingRestaurant){
-			this.setState({
-				targetRestaurant: this.props.restaurants[e.currentTarget.id]
-			})
-		}
-		if (!this.props.viewingRestaurant){
-			this.props.toggleRestaurantView();
-			this.setState({
-				targetRestaurant: null
-			})
-		}
-	}
+	// toggleRestaurantShow = async (e, id, place_id) => {
+	// 	const restaurant = await this.props.getRestaurant(place_id);
+	// 	if (restaurant) {	
+	// 		this.props.toggleRestaurantView();
+	// 	}
+	// 	if (this.props.viewingRestaurant){
+	// 		this.setState({
+	// 			targetRestaurant: this.props.restaurants[e.currentTarget.id]
+	// 		})
+	// 	}
+	// 	if (!this.props.viewingRestaurant){
+	// 		this.props.toggleRestaurantView();
+	// 		this.setState({
+	// 			targetRestaurant: null
+	// 		})
+	// 	}
+	// }
 
 	renderComponent = () => {
 		if (this.state.viewingRestaurant) {

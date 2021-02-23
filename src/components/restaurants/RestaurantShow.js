@@ -21,29 +21,32 @@ class RestaurantShow extends React.Component {
 			return (
 				<div>
 					<PostComments 
+						addingComment={this.props.addingComment} 
 						restaurant={this.props.restaurant} 
-						toggleCommentView={this.toggleCommentView}
+						toggleCommentForm={this.toggleCommentForm} 
 					/>
 				</div>
 			)
 		}
-		if (this.props.reducerRestaurant) {
+		if (this.props.rRestaurant) {
 			return <div>{this.renderReducerRestaurant()}</div>
 		}
-		if (!this.props.reducerRestaurant){
+		if (!this.props.rRestaurant){
 			return <div>{this.renderListRestaurant()}</div>
 		}
 	}
 
 	renderListRestaurant = (props) => {
-		if (!this.props.reducerRestaurant) {
+		if (!this.props.rRestaurant) {
 			return (
 				<div>
 					<i className="huge utensils icon"></i>
 					<h2 className="ui headline">{this.props.restaurant.name}</h2>
-					<CommentButtons
-						toggleCommentView={this.toggleCommentView}
-						toggleRestaurantView={this.props.toggleRestaurantView} 
+					<h4 className="ui sub">NO DB ENTRY</h4>
+					<CommentButtons 
+						addingComment={this.props.addingComment}
+						toggleCommentForm={this.toggleCommentForm}
+						toggleRestaurantView={this.toggleRestaurantView} 
 					/>
 				</div>
 			)
@@ -51,30 +54,35 @@ class RestaurantShow extends React.Component {
 	}
 
 	renderReducerRestaurant = (props) => {
-		if (this.props.reducerRestaurant){
+		if (this.props.rRestaurant){
 			return (
 				<div className="ui list">
 					<i className="huge utensils icon"></i>
-					<h2 className="ui headline">{this.props.reducerRestaurant.name}</h2>
-					<h3 className="ui headline">{this.props.reducerRestaurant.address}</h3>
-					<h3 className="ui headline">{this.props.reducerRestaurant.place_id}</h3>
+					<h2 className="ui headline">{this.props.rRestaurant.name}</h2>
+					<h3 className="ui headline">{this.props.rRestaurant.address}</h3>
+					<h3 className="ui headline">{this.props.rRestaurant.place_id}</h3>
 					<div className="ui sizer vertical segment">
 						<h4 className="ui medium header">Comments</h4>
-						<RenderComments/>
+						<RenderComments />
 						<div className="ui list">
 							<CommentButtons 
-								toggleCommentView={this.toggleCommentView}
-								toggleRestaurantView={this.props.toggleRestaurantView}
+								addingComment={this.props.addingComment}
+								toggleCommentForm={this.toggleCommentForm} 
+								toggleRestaurantView={this.toggleRestaurantView}
 							/>
 						</div>
 					</div>
 				</div>
-			)
+			);
 		}
 	}
 
-	toggleCommentView = (props) => {
+	toggleCommentForm = props => {
 		this.props.toggleCommentForm();
+	}
+
+	toggleRestaurantView = props => {
+		this.props.toggleRestaurantView();
 	}
 
 	render(){
@@ -91,7 +99,8 @@ const mapStateToProps = state => {
 	return {
 		addingComment: state.restaurant.addingComment,
 		comments: state.comments,
-		reducerRestaurant: state.restaurant.targetRestaurant
+		rRestaurant: state.restaurant.targetRestaurant,
+		rplace_id: state.restaurant.targetRestaurant.place_id
 	}
 };
 

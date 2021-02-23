@@ -103,12 +103,12 @@ export const toggleLogInForm = () => dispatch => {
 
 
 export const toggleCommentForm = () => async (dispatch, getState) => {
-	const { editingComment } = await getState().comments;
-	if ( editingComment ) {
-		dispatch({ type: HIDE_COMMENT_EDIT_FORM })
+	const { addingComment } = await getState().restaurant;
+	if (addingComment) {
+		dispatch({ type: HIDE_COMMENT_FORM })
 	}
-	if (!editingComment) {
-		dispatch({ type: SHOW_COMMENT_EDIT_FORM })
+	if (!addingComment) {
+		dispatch({ type: SHOW_COMMENT_FORM })
 	}
 }
 
@@ -137,6 +137,10 @@ export const getRestaurant = (place_id) => async dispatch => {
 	if (response.status === 200) {
 		const restaurant = response.data;
 		dispatch({  type: GET_RESTAURANT, payload: restaurant });
+	}
+	if (response.status === 400) {
+		const { message } = response.data;
+		dispatch({ type: GET_RESTAURANT, payload: message });
 	}
 }
 
@@ -167,12 +171,12 @@ export const editComment = (place_id, comment_id, formValues) => async dispatch 
 }
 
 export const toggleEditCommentView = () => async (dispatch, getState) => {
-	const { editingComment } = await getState().comments.editingComment;
+	const { editingComment } = await getState().comments;
 	if (editingComment) {
-		dispatch({ type: HIDE_COMMENT_FORM })
+		dispatch({ type: HIDE_COMMENT_EDIT_FORM })
 	}
 	if (!editingComment) {
-		dispatch({ type: SHOW_COMMENT_FORM })
+		dispatch({ type: SHOW_COMMENT_EDIT_FORM })
 	}
 }
 
