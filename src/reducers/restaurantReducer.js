@@ -1,6 +1,7 @@
 import { 
 	POST_COMMENT,
 	GET_RESTAURANT,
+	GET_RESTAURANT_DETAILS,
 	GET_RESTAURANT_FAILED,
 	SHOW_COMMENT_FORM,
 	HIDE_COMMENT_FORM
@@ -10,7 +11,8 @@ const INITIAL_STATE = {
 	addingComment: false,
 	targetRestaurant: '',
 	newRestaurant: '',
-	newComment: ''
+	newComment: '',
+	listRestaurant: ''
 }
 
 const restaurantReducer = (state=INITIAL_STATE, action ) => {
@@ -40,6 +42,11 @@ const restaurantReducer = (state=INITIAL_STATE, action ) => {
 			return {
 				...state,
 				targetRestaurant: null
+			}
+		case GET_RESTAURANT_DETAILS:
+			return {
+				...state,
+				listRestaurant: action.payload.data
 			}
 		default: 
 			return state;

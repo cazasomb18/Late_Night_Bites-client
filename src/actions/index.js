@@ -2,11 +2,14 @@ import auth from '../apis/auth';
 import restaurants from '../apis/restaurants';
 import comments from '../apis/comments';
 import {
+	CLOSE_DASH,
+	CLOSE_LIST,
 	DELETE_COMMENT,
 	EDIT_COMMENT,
 	GET_COORDS,
 	GET_COMMENT,
 	GET_RESTAURANT,
+	GET_RESTAURANT_DETAILS,
 	GET_RESTAURANT_COMMENTS,
 	GET_RESTAURANT_FAILED,
 	GET_USER_RESTAURANTS,
@@ -16,6 +19,8 @@ import {
 	HIDE_RESTAURANT,
 	LOG_IN,
 	LOG_OUT,
+	OPEN_DASH,
+	OPEN_LIST,
 	POST_COMMENT,
 	REGISTER_USER,
 	RENDER_LIST,
@@ -102,6 +107,27 @@ export const toggleLogInForm = () => dispatch => {
 	dispatch({ type: TOGGLE_LOGIN })
 }
 
+export const toggleRestaurantList = () => async (dispatch, getState) => {
+	const { viewingList } = await getState().restaurants;
+	if (!viewingList) {
+		dispatch({ type: OPEN_LIST })
+	}
+	if (viewingList) {
+		dispatch({ type: CLOSE_LIST })
+	}
+}
+
+export const toggleDash = () => async (dispatch, getState) => {
+	const { viewingDash } = await getState().auth;
+	if (!viewingDash){
+		dispatch({ type: OPEN_DASH })
+	}
+	if (viewingDash) {
+		dispatch({ type: CLOSE_DASH })
+	}
+
+}
+
 
 export const toggleCommentForm = () => async (dispatch, getState) => {
 	const { addingComment } = await getState().restaurant;
@@ -156,7 +182,7 @@ export const getRestaurantComments = () => async (dispatch, getState) => {
 
 
 export const getUserRestaurantInfo = () => async (dispatch, getState) => {
-	const id = getState().auth.user._id;
+	const id = await getState().auth.user._id;
 	const response = await auth.get(`/usercomments/${id}`);
 	if (response.status === 200) {
 		dispatch({ type: GET_USER_RESTAURANTS, payload: response.data })
@@ -164,8 +190,7 @@ export const getUserRestaurantInfo = () => async (dispatch, getState) => {
 }
 
 
-export const editComment = (comment_id, formValues, getState) => async dispatch => {
-	const { place_id } = await getState().restaurant.targetRestaurant;
+export const editComment = (place_id, comment_id, formValues) => async dispatch => {
 	const response = await comments.put(`/restaurant/${place_id}/edit/${comment_id}`, {...formValues});
 	if (response.status === 200) {
 		dispatch({ type: EDIT_COMMENT, payload: response });
@@ -186,7 +211,7 @@ export const toggleEditCommentView = () => async (dispatch, getState) => {
 
 export const deleteComment = id => async (dispatch, getState) => {
 	const { place_id } = await getState().restaurant.targetRestaurant;
-	const response = await comments.delete(`/restaurant/${place_id}/${id}`);
+	await comments.delete(`/restaurant/${place_id}/${id}`);
 	dispatch({ type: DELETE_COMMENT });
 }
 
@@ -198,5 +223,10 @@ export const getComment = id => async dispatch => {
 	}
 }
 
-
+export const getRestaurantDetails = place_id => async dispatch => {
+	const response = await restaurants.get(`/restaurant/${place_id}`);
+	if (response.status === 200) {
+		dispatch({ type: GET_RESTAURANT_DETAILS, payload: response.data })
+	}
+}
 

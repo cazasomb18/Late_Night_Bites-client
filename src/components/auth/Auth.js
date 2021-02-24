@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { 
 	logIn, 
-	logOut, 
+	logOut,
 	registerUser, 
 	toggleRegisterForm, 
 	toggleLogInForm

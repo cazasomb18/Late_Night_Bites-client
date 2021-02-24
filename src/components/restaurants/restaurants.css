@@ -16,6 +16,6 @@
 	justify-content: space-between;
 }
 
-.button-item {
-
+.list-button {
+	transform: translateY(-25px);
 }

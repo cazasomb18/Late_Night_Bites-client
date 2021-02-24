@@ -1,5 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+
+import { getRestaurantComments, getRestaurant, editComment } from '../../actions';
 
 class EditCommentForm extends React.Component {
 	componentDidMount(){
@@ -41,8 +44,10 @@ class EditCommentForm extends React.Component {
 		formValues.restaurant_name = this.props.targetComment.restaurant_name;
 		formValues.place_id = this.props.place_id;
 		formValues._id = this.props.targetComment._id;
-		await this.props.editComment(formValues._id);
-		this.props.toggleCommentView();
+		await this.props.editComment(this.props.place_id, formValues._id, formValues);
+		await this.props.getRestaurant(this.props.place_id);
+		await this.props.getRestaurantComments();
+		this.props.toggleEditCommentView();
 	}
 
 	render(){
@@ -98,6 +103,23 @@ const validate = formValues => {
 	}
 	return errors;
 };
+
+const mapStateToProps = (state) => {
+	return {	
+		place_id: state.restaurant.targetRestaurant.place_id,
+		targetComment: state.comments.targetComment
+	}
+};
+
+EditCommentForm = connect(
+	mapStateToProps,
+	{
+		getRestaurantComments,
+		getRestaurant,
+		editComment
+ 	}
+)(EditCommentForm)
+
 
 export default reduxForm({
 	form: 'editCommentForm',

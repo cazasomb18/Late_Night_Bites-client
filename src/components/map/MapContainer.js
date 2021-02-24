@@ -48,7 +48,7 @@ const MapContainer = props => {
 	}
 	return(
 		<div className=" ui container mapWrapper">
-			<div className="mapContainer" ref={mapContainerRef} style={{marginTop: 20, marginBottom: 20}}/>
+			<div className="mapContainer" ref={mapContainerRef} style={{marginTop: 25, marginBottom: 25}}/>
 		</div>
 	); 
 };

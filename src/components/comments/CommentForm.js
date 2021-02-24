@@ -37,15 +37,15 @@ class CommentForm extends React.Component {
 		);
 	}
 
-	onSubmit = (formValues) => {
+	onSubmit = async (formValues) => {
 		formValues.commentAuthor = this.props.userName;
 		formValues.restaurant_name = this.props.restaurant.name;
 		formValues.name = this.props.restaurant.name;
-		formValues.address = this.props.restaurant.vicinity + ',' + this.props.restaurant.plus_code.compound_code.split(',')[1].split();
+		formValues.address = this.props.restaurant.address;
 		formValues.place_id = this.props.restaurant.place_id;
-		this.props.postComment(formValues);
-		this.props.toggleCommentView();
-
+		await this.props.postComment(formValues);
+		await this.props.getRestaurantComments();
+		this.props.toggleCommentForm();
 	}
 
 	render(){
@@ -61,7 +61,7 @@ class CommentForm extends React.Component {
 				<Field 
 					name="address" 
 					component={this.renderReadOnlyInput} 
-					defaultValue={this.props.restaurant.vicinity + ", " + this.props.restaurant.plus_code.compound_code.split(',')[1].split()}
+					defaultValue={this.props.restaurant.address}
 					type="text" 
 					label="Address"
 				/>

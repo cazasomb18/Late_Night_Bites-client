@@ -1,11 +1,13 @@
 import _ from 'lodash';
 import { 
+	CLOSE_DASH,
 	LOG_IN,
 	LOG_OUT,
+	GET_USER_RESTAURANTS,
+	OPEN_DASH,
 	REGISTER_USER,
 	TOGGLE_REGISTER,
 	TOGGLE_LOGIN,
-	GET_USER_RESTAURANTS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -14,7 +16,8 @@ const INITIAL_STATE = {
 	userName: '',
 	user: '',
 	restaurants: [],
-	comments: []
+	comments: [],
+	viewingDash: false,
 }
 
 const authReducer = (state = INITIAL_STATE, action) => {
@@ -60,6 +63,17 @@ const authReducer = (state = INITIAL_STATE, action) => {
 				comments: [...action.payload.data.comments],
 				restaurants: [...action.payload.data.restaurants]
 
+			}
+		case CLOSE_DASH: 
+			return {
+				...state,
+				viewingDash: false
+
+			}
+		case OPEN_DASH: 
+			return {
+				...state,
+				viewingDash: true
 			}
 		default: 
 			return state;

@@ -1,10 +1,17 @@
 import _ from 'lodash';
-import { RENDER_LIST, SHOW_RESTAURANT, HIDE_RESTAURANT } from '../actions/types';
+import { 
+	RENDER_LIST, 
+	SHOW_RESTAURANT, 
+	HIDE_RESTAURANT, 
+	OPEN_LIST,
+	CLOSE_LIST
+} from '../actions/types';
 
 const INITIAL_STATE = {
 	list: '',
 	resLatLng: '',
-	viewingRestaurant: false
+	viewingRestaurant: false,
+	viewingList: false,
 }
 
 const restaurantsReducer = (state = INITIAL_STATE, action) => {
@@ -24,6 +31,16 @@ const restaurantsReducer = (state = INITIAL_STATE, action) => {
 			return {
 				...state,
 				viewingRestaurant: false
+			}
+		case OPEN_LIST:
+			return {
+				...state,
+				viewingList: true
+			}
+		case CLOSE_LIST:
+			return {
+				...state,
+				viewingList: false
 			}
 		default:
 			return state;

@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import EditCommentForm from './EditCommentForm';
-import { editComment } from '../../actions';
+import { editComment, getRestaurant } from '../../actions';
+import ComponentTitle from '../ComponentTitle';
 
 class CommentEdit extends React.Component {
 
@@ -13,15 +14,16 @@ class CommentEdit extends React.Component {
 	render(){
 		return (
 			<div>
+				<ComponentTitle editingComment={this.props.editingComment}/>
 				<EditCommentForm 
-					initialValues={{commentBody: this.props.targetComment.commentBody}}
 					editComment={this.props.editComment}
-					targetComment={this.props.targetComment}
+					initialValues={{commentBody: this.props.targetComment.commentBody}}
+					getRestaurant={this.props.getRestaurant}
 					toggleEditCommentView={this.props.toggleEditCommentView}
 				/>
 				<button 
 					className="ui red button"
-					style={{float: "right"}}
+					style={{float: "left"}}
 					onClick={(e)=>{this.props.toggleEditCommentView()} }
 				>EXIT</button>
 			</div>
@@ -32,10 +34,12 @@ class CommentEdit extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		targetComment: state.comments.targetComment,
+		place_id: state.restaurant.targetRestaurant.place_id,
+		editingComment: state.comments.editingComment
 	}
 };
 
 export default connect(
 	mapStateToProps,
-	{ editComment }
+	{ editComment, getRestaurant }
 )(CommentEdit);

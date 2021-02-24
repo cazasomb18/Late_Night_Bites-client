@@ -4,9 +4,10 @@ import _ from 'lodash';
 
 import MapContainer from '../map/MapContainer';
 import { 
+	getRestaurant,
 	getRestaurants, 
-	toggleRestaurantView, 
-	getRestaurant 
+	toggleRestaurantList,
+	toggleRestaurantView 
 } from '../../actions';
 import Spinner from '../geo/Spinner';
 import RestaurantShow from './RestaurantShow';
@@ -18,7 +19,7 @@ class RenderList extends React.Component {
 		this.props.getRestaurants();
 	}
 
-	renderList = (props) => {
+	renderList (props){
 		if (this.props.restaurants) {
 			return this.props.restaurants.map( (restaurant, i) => {
 				const address = restaurant.vicinity + ", " + restaurant.plus_code.compound_code.split(',')[1].split();
@@ -40,7 +41,7 @@ class RenderList extends React.Component {
 								<div className="buttoncontainer">
 									<button 
 										place_id={place_id}
-										className="button-item ui primary button content"
+										className="ui primary button content"
 										onClick={ async e => {
 											await this.props.getRestaurant(place_id);
 											this.toggleRestaurantView();
@@ -57,16 +58,11 @@ class RenderList extends React.Component {
 		return <Spinner message="Finding Late Night Bites..."/>;
 	}
 
-	toggleRestaurantView = () => {
-		if (!this.props.viewingRestaurant){
-			this.props.toggleRestaurantView();
-		}
-		if (this.props.viewingRestaurant) {
-			this.props.toggleRestaurantView();
-		}
+	toggleRestaurantView = (e) => {
+		this.props.toggleRestaurantView();
 	}
 
-	renderComponent = () => {
+	renderComponent = (props) => {
 		if (this.props.viewingRestaurant) {
 			return (
 				<div>
@@ -83,6 +79,11 @@ class RenderList extends React.Component {
 					<h1 className="ui header">Restaurant List</h1>
 					<div className="ui list">
 						{this.renderList()}
+						<button
+							style={{float: "right"}}
+							className="ui red button list-button"
+							onClick={this.onListButtonClick}
+						>CLOSE LIST</button>
 					</div>
 					<MapContainer/>
 				</div>
@@ -90,8 +91,24 @@ class RenderList extends React.Component {
 		}
 	}
 
+	onListButtonClick = (e) => {
+		this.props.toggleRestaurantList();
+	}
+
 	render(){
-		return <div>{this.renderComponent()}</div>;
+		if (this.props.viewingList){
+			return <div>{this.renderComponent()}</div>;
+		}
+		if (!this.props.viewingList) {
+			return (
+				<div>
+					<button 
+						className="ui primary button"
+						onClick={this.onListButtonClick}
+					>RENDERLIST</button>
+				</div>
+			);
+		}
 	}
 }
 
@@ -102,7 +119,8 @@ const mapStateToProps = state => {
 		restaurants: state.restaurants.list.results,
 		targetRestaurant: state.restaurant.targetRestaurant,
 		user: state.auth.user,
-		viewingRestaurant: state.restaurants.viewingRestaurant
+		viewingRestaurant: state.restaurants.viewingRestaurant,
+		viewingList: state.restaurants.viewingList,
 	}	
 }
 
@@ -110,7 +128,8 @@ export default connect(
 	mapStateToProps,
 	{ 
 		getRestaurant,
-		getRestaurants, 
+		toggleRestaurantList,
+		getRestaurants,
 		toggleRestaurantView
 	}
  )(RenderList);
