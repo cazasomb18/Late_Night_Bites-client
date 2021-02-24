@@ -21,27 +21,71 @@ class EditCommentForm extends React.Component {
 		return (
 			<div className={className}>
 				<label>{label}</label>
-				<input type={type} placeholder={placeholder}/>
+				<input {...input} type={type} placeholder={placeholder} autoComplete="off"/>
 			</div>
 		);
 	}
 
-	onSubmit = (formValues) => {
-		console.log(formValues);
+	renderReadOnlyInput = ({ label, type, defaultValue }) => {
+		const className = "field ui header";
+		return (
+			<div className={className}>
+				<label>{label}</label>
+				<input type={type} readOnly defaultValue={defaultValue}/>
+			</div>
+		);
+	}
+
+	onSubmit = async (formValues) => {
+		formValues.commentAuthor = this.props.targetComment.commentAuthor;
+		formValues.restaurant_name = this.props.targetComment.restaurant_name;
+		formValues.place_id = this.props.place_id;
+		formValues._id = this.props.targetComment._id;
+		await this.props.editComment(formValues._id);
+		this.props.toggleCommentView();
 	}
 
 	render(){
 		console.log(this.props);
 		return (
-			<div className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+			<form className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
 				<Field 
-					name="commentBody" 
-					component={this.renderInput} 
+					name="restaurant_name"
+					component={this.renderReadOnlyInput}
+					defaultValue={this.props.targetComment.restaurant_name}
 					type="text" 
-					label="Comment"
-					placeHolder={this.props.comment.commentBody}
+					label="Restaurant Name" 
 				/>
-			</div>
+				<Field 
+					name="restaurant_id"
+					component={this.renderReadOnlyInput}
+					defaultValue={this.props.targetComment.restaurant_id}
+					type="text"
+					label="Restaurant ID"
+				/>
+				<Field 
+					name="commentAuthor"
+					component={this.renderReadOnlyInput} 
+					defaultValue={this.props.targetComment.commentAuthor}
+					type="text"
+					label="Author"
+				/>
+				<Field 
+					name="commentBody"
+					component={this.renderInput} 
+					defaultValue={this.props.targetComment.commentBody}
+					label="Comment Text"
+					type="text" 
+				/>
+				<Field 
+					name="_id"
+					component={this.renderReadOnlyInput}
+					defaultValue={this.props.targetComment._id}
+					label="Comment ID"
+					type="text"
+				/>
+				<button className="ui button primary" type="submit">Submit</button>
+			</form>
 		);
 	}
 }

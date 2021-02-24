@@ -8,6 +8,7 @@ import {
 	GET_COMMENT,
 	GET_RESTAURANT,
 	GET_RESTAURANT_COMMENTS,
+	GET_RESTAURANT_FAILED,
 	GET_USER_RESTAURANTS,
 	GEOLOCATION_DENIED,
 	HIDE_COMMENT_FORM,
@@ -139,8 +140,7 @@ export const getRestaurant = (place_id) => async dispatch => {
 		dispatch({  type: GET_RESTAURANT, payload: restaurant });
 	}
 	if (response.status === 400) {
-		const { message } = response.data;
-		dispatch({ type: GET_RESTAURANT, payload: message });
+		dispatch({ type: GET_RESTAURANT_FAILED });
 	}
 }
 
@@ -163,20 +163,23 @@ export const getUserRestaurantInfo = () => async (dispatch, getState) => {
 	}
 }
 
-export const editComment = (place_id, comment_id, formValues) => async dispatch => {
-	const response = await comments.put(`/restaurant/${place_id}/${comment_id}`, {...formValues});
+
+export const editComment = (comment_id, formValues, getState) => async dispatch => {
+	const { place_id } = await getState().restaurant.targetRestaurant;
+	const response = await comments.put(`/restaurant/${place_id}/edit/${comment_id}`, {...formValues});
 	if (response.status === 200) {
 		dispatch({ type: EDIT_COMMENT, payload: response });
 	}
 }
 
+
 export const toggleEditCommentView = () => async (dispatch, getState) => {
 	const { editingComment } = await getState().comments;
-	if (editingComment) {
-		dispatch({ type: HIDE_COMMENT_EDIT_FORM })
-	}
 	if (!editingComment) {
 		dispatch({ type: SHOW_COMMENT_EDIT_FORM })
+	}
+	if (editingComment) {
+		dispatch({ type: HIDE_COMMENT_EDIT_FORM })
 	}
 }
 
@@ -188,7 +191,7 @@ export const deleteComment = id => async (dispatch, getState) => {
 }
 
 
-export const getComment = (id) => async dispatch => {
+export const getComment = id => async dispatch => {
 	const response = await comments.get(`/${id}`);
 	if (response.status === 200) {
 		dispatch({ type: GET_COMMENT, payload: response.data });

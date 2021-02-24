@@ -13,11 +13,11 @@ import CommentEdit from './CommentEdit';
 class RenderComments extends React.Component {
 
 	componentDidMount(){
-		this.props.getRestaurantComments();
+
 	}
 
 	renderComments = (props) => {
-		if (this.props.comments) {
+		if (this.props.comments.length > 0) {
 			return this.props.comments.map((comment, index) => {
 				const id = comment._id;
 				return (
@@ -27,7 +27,7 @@ class RenderComments extends React.Component {
 								<h4>{index+1}</h4>
 								<h5 className="ui sub">{comment.commentBody}</h5>
 								<h5 className="ui sub">by: {comment.commentAuthor}</h5>
-								<h5 className="ui sub">{id}</h5>
+								<h5 className="ui sub">comment_id: {id}</h5>
 								<button 
 									id={comment._id}
 									className="ui red button"
@@ -39,7 +39,10 @@ class RenderComments extends React.Component {
 								<button
 									id={comment._id}
 									className="ui primary button"
-									onClick={ async e => this.showCommentForm(id)}
+									onClick={ async (e) => {
+										await this.props.getComment(id);
+										this.toggleEditCommentView();
+									}}
 								>EDIT</button>
 							</div>
 						</div>
@@ -47,34 +50,40 @@ class RenderComments extends React.Component {
 				);
 			})
 		}
-		if (!this.props.comments){
-			return <div>NO COMMENTS FOUND</div>;
+		if (this.props.comments.length === 0) {
+			return (
+				<div>
+					<h3 className={"ui headline"}>NO COMMENTS FOUND</h3>
+				</div>
+			);
 		}
+	}
+
+	renderComponent = (props) => {
+		if (this.props.editingComment) {
+			return <div>{this.renderEditForm()}</div>;
+		}
+		if (!this.props.editingComment) {
+			return <div>{this.renderComments()}</div>;
+		}
+	}
+
+	toggleEditCommentView = (e) => {
+		this.props.toggleEditCommentView();
 	}
 
 	renderEditForm = (props) => {
 		return (
 			<div>
-				<CommentEdit place_id={this.props.place_id}/>
+				<CommentEdit 
+					toggleEditCommentView={this.toggleEditCommentView}
+				/>
 			</div>
 		);
 	}
 
-	renderComponent = (props) => {
-		if (this.props.editingComment) {
-			return <div>{this.renderEditForm()}</div>
-		}
-		if (!this.props.editingComment){
-			return <div>{this.renderComments()}</div>
-		}
-	}
-
 	deleteComment = (id) => {
 		this.props.deleteComment(id);
-	}
-
-	showCommentForm = () => {
-		this.props.toggleEditCommentView();
 	}
 
 	render(){
@@ -84,7 +93,6 @@ class RenderComments extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		comment: state.comments.targetComment,
 		comments: state.comments.list,
 		editingComment: state.comments.editingComment,
 		restaurant: state.restaurant.targetRestaurant,

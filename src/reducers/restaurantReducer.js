@@ -1,6 +1,7 @@
 import { 
 	POST_COMMENT,
 	GET_RESTAURANT,
+	GET_RESTAURANT_FAILED,
 	SHOW_COMMENT_FORM,
 	HIDE_COMMENT_FORM
 } from '../actions/types';
@@ -17,7 +18,7 @@ const restaurantReducer = (state=INITIAL_STATE, action ) => {
 		case SHOW_COMMENT_FORM:
 			return {
 				...state,
-				addingComment: true
+				addingComment: true,
 			}
 		case HIDE_COMMENT_FORM:
 			return {
@@ -34,6 +35,11 @@ const restaurantReducer = (state=INITIAL_STATE, action ) => {
 			return {
 				...state,
 				targetRestaurant: action.payload.data
+			}
+		case GET_RESTAURANT_FAILED:
+			return {
+				...state,
+				targetRestaurant: null
 			}
 		default: 
 			return state;

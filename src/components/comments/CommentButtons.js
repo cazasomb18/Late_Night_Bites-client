@@ -1,7 +1,6 @@
 import React from 'react';
 
 const CommentButtons = (props) => {
-	console.log(props);
 	return (
 		<div className="ui grid container">
 			<div className="eight wide column">
@@ -15,7 +14,7 @@ const CommentButtons = (props) => {
 				<button
 					className="ui red button" 
 					onClick={props.toggleRestaurantView}
-				>Exit
+				>Exit to List
 				</button>
 			</div>
 		</div>

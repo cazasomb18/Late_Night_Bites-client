@@ -6,7 +6,7 @@ import { getUserRestaurantInfo } from '../../actions';
 class Dashboard extends React.Component {
 
 	componentDidMount(){
-		if (this.props.loggedIn) {
+		if (this.props.loggedIn){
 			this.props.getUserRestaurantInfo();
 		}
 	}

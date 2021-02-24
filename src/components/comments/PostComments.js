@@ -38,7 +38,7 @@ class PostComments extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		addingComment: state.restaurant.addingComment,
+		restaurant: state.restaurant.targetRestaurant,
 		userName: state.auth.userName,
 		userId: state.auth.user._id
 	}

@@ -3,47 +3,48 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import MapContainer from '../map/MapContainer';
-import { getRestaurants, toggleRestaurantView, getRestaurant } from '../../actions';
+import { 
+	getRestaurants, 
+	toggleRestaurantView, 
+	getRestaurant 
+} from '../../actions';
 import Spinner from '../geo/Spinner';
 import RestaurantShow from './RestaurantShow';
 import './restaurants.css';
 
 class RenderList extends React.Component {
-	constructor(props){
-		super(props);
-		this.state = {
-			viewingRestaurant: false,
-			targetRestaurant: null
-		}
-	}
-
+	
 	componentDidMount(){
 		this.props.getRestaurants();
 	}
 
 	renderList = (props) => {
 		if (this.props.restaurants) {
-			return this.props.restaurants.map( (restaurant, index) => {
+			return this.props.restaurants.map( (restaurant, i) => {
 				const address = restaurant.vicinity + ", " + restaurant.plus_code.compound_code.split(',')[1].split();
-				const photoReference = restaurant.photos[0].photo_reference;
 				const dollarIcons = _(restaurant.price_level).times(i => <i className="dollar sign icon" key={i}></i>);
 				const starsIcons = _(Math.floor(restaurant.rating)).times(i => <i className="star outline icon" key={i}></i>);
+				const place_id = restaurant.place_id;
 				if (restaurant.business_status === "OPERATIONAL") {
 					return (
-						<div className="item" key={restaurant.place_id}>
+						<div className="item" key={place_id}>
 							<h3>{restaurant.name}</h3>
 							<div className="content">
 								<h5 className="ui header">{address}</h5>
+								<h5 className="sub header">{place_id}</h5>
 								<div className="ui label content">
-									<h5>Rating: {starsIcons}</h5>
-									<h5>Price: {dollarIcons}</h5>
-									<h5>Total reviews: {restaurant.user_ratings_total}</h5>
+									<h5 className="ui sub">Rating: {starsIcons}</h5>
+									<h5 className="ui sub">Price: {dollarIcons}</h5>
+									<h5 className="ui sub">Total reviews: {restaurant.user_ratings_total}</h5>
 								</div>
 								<div className="buttoncontainer">
-									<button
+									<button 
+										place_id={place_id}
 										className="button-item ui primary button content"
-										onClick={this.toggleRestaurantView}
-										id={index}
+										onClick={ async e => {
+											await this.props.getRestaurant(place_id);
+											this.toggleRestaurantView();
+										}}
 									>RESTAURANT SHOW</button>
 								</div>
 							</div>
@@ -53,55 +54,30 @@ class RenderList extends React.Component {
 				return null;
 			})
 		} 
-		return <Spinner message="Finding Late Night Bites"/>;
+		return <Spinner message="Finding Late Night Bites..."/>;
 	}
 
-	toggleRestaurantView = async (e, id) => {
-		if (!this.state.viewingRestaurant){
-			this.setState({
-				viewingRestaurant: true,
-				targetRestaurant: this.props.restaurants[e.currentTarget.id]
-			})
+	toggleRestaurantView = () => {
+		if (!this.props.viewingRestaurant){
+			this.props.toggleRestaurantView();
 		}
-		if (this.state.viewingRestaurant) {
-			this.setState({
-				viewingRestaurant: false,
-				targetRestaurant: null
-			})
+		if (this.props.viewingRestaurant) {
+			this.props.toggleRestaurantView();
 		}
 	}
-
-	// toggleRestaurantShow = async (e, id, place_id) => {
-	// 	const restaurant = await this.props.getRestaurant(place_id);
-	// 	if (restaurant) {	
-	// 		this.props.toggleRestaurantView();
-	// 	}
-	// 	if (this.props.viewingRestaurant){
-	// 		this.setState({
-	// 			targetRestaurant: this.props.restaurants[e.currentTarget.id]
-	// 		})
-	// 	}
-	// 	if (!this.props.viewingRestaurant){
-	// 		this.props.toggleRestaurantView();
-	// 		this.setState({
-	// 			targetRestaurant: null
-	// 		})
-	// 	}
-	// }
 
 	renderComponent = () => {
-		if (this.state.viewingRestaurant) {
+		if (this.props.viewingRestaurant) {
 			return (
 				<div>
 					<RestaurantShow
-						place_id={this.state.targetRestaurant.place_id}
-						restaurant={this.state.targetRestaurant}
-						toggleRestaurantView={this.toggleRestaurantView}
+						place_id={this.props.targetRestaurant.place_id}
+						toggleRestaurantView={this.toggleRestaurantView} 
 					/>
 				</div>
 			);
 		}
-		if (!this.state.viewingRestaurant){
+		if (!this.props.viewingRestaurant) {
 			return (
 				<div>
 					<h1 className="ui header">Restaurant List</h1>
@@ -110,12 +86,12 @@ class RenderList extends React.Component {
 					</div>
 					<MapContainer/>
 				</div>
-			) 
+			); 
 		}
 	}
 
 	render(){
-		return <div>{this.renderComponent()}</div>
+		return <div>{this.renderComponent()}</div>;
 	}
 }
 
@@ -128,9 +104,13 @@ const mapStateToProps = state => {
 		user: state.auth.user,
 		viewingRestaurant: state.restaurants.viewingRestaurant
 	}	
-};
+}
 
 export default connect(
 	mapStateToProps,
-	{ getRestaurants, toggleRestaurantView, getRestaurant }
+	{ 
+		getRestaurant,
+		getRestaurants, 
+		toggleRestaurantView
+	}
  )(RenderList);

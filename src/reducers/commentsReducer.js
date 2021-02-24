@@ -16,6 +16,11 @@ const INITIAL_STATE = {
 
 const commentsReducer = (state=INITIAL_STATE, action) => {
 	switch(action.type) {
+		case GET_COMMENT:
+			return {
+				...state,
+				targetComment: action.payload.data
+			}
 		case GET_RESTAURANT_COMMENTS:
 			return {
 				...state,
@@ -23,20 +28,15 @@ const commentsReducer = (state=INITIAL_STATE, action) => {
 				list: [...action.payload.data.comments],
 				ids: {..._.mapKeys(action.payload.data.comments,  '_id')}
 			}
-		case GET_COMMENT:
+		case SHOW_COMMENT_EDIT_FORM:
 			return {
 				...state,
-				targetComment: action.payload.data
+				editingComment: true
 			}
 		case HIDE_COMMENT_EDIT_FORM:
 			return {
 				...state,
 				editingComment: false
-			}
-		case SHOW_COMMENT_EDIT_FORM:
-			return {
-				...state,
-				editingComment: true
 			}
 		default:
 			return state;
