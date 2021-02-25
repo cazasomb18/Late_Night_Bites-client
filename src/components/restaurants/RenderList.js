@@ -103,7 +103,7 @@ class RenderList extends React.Component {
 			return (
 				<div>
 					<button 
-						className="ui primary button"
+						className="pulse-grow ui primary button"
 						onClick={this.onListButtonClick}
 					>RENDERLIST</button>
 				</div>

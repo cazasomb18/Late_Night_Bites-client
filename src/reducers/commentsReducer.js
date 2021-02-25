@@ -44,7 +44,7 @@ const commentsReducer = (state=INITIAL_STATE, action) => {
 			}
 
 		case DELETE_COMMENT:
-			return _.omit(state, action.payload.data)
+			return _.omit(state, action.payload)
 
 		default:
 			return state;

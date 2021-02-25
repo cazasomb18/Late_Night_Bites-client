@@ -9,7 +9,7 @@ const textStyle = {
 	transform: "translateY(10px)"
 } 
 
-const className = "ui header"
+const className = "ui headline"
 
 const AppTitle = (props) => {
 	return(

@@ -26,19 +26,18 @@ class RenderComments extends React.Component {
 							<div className="description">
 								<h5 className="ui sub">{comment.commentBody}</h5>
 								<h5 className="ui sub">by: {comment.commentAuthor}</h5>
-								<h5 className="ui sub">comment_id: {id}</h5>
+								<h5 className="ui sub">id: {id}</h5>
 								<button 
 									id={id}
 									className="ui red button"
-									onClick={ async (e) =>  {
-										await this.deleteComment(id);
-										this.props.getRestaurantComments();
+									onClick={async (e) => {
+										await this.props.deleteComment(id);
+										await this.props.getRestaurantComments();
 									}}
 								>DELETE</button>
 								<button
-									id={id}
 									className="ui primary button"
-									onClick={ async (e) => {
+									onClick={async (e) => {
 										await this.props.getComment(id);
 										this.toggleEditCommentView();
 									}}
@@ -96,7 +95,9 @@ const mapStateToProps = (state) => {
 		editingComment: state.comments.editingComment,
 		restaurant: state.restaurant.targetRestaurant,
 		ids: Object.keys(state.comments.ids),
-		place_id: state.restaurant.targetRestaurant.place_id
+		place_id: state.restaurant.targetRestaurant.place_id,
+		comment_id: state.comments.targetComment._id,
+		viewingRestaurant: state.restaurants.viewingRestaurant
 	}
 };
 

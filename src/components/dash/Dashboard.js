@@ -1,19 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getUserRestaurantInfo, toggleDash } from '../../actions';
+// import RestaurantShow from '../restaurants/RestaurantShow';
+
+import { 
+	getRestaurant,
+	getRestaurantComments, 
+	getUserRestaurantInfo, 
+	toggleDash,
+	toggleRestaurantView
+} from '../../actions';
 
 class Dashboard extends React.Component {
 
 	componentDidMount(){
-		if (this.props.loggedIn) {
-			this.props.getUserRestaurantInfo();
-		}
 	}
 
-	onDashButtonClick = (e) => {
+	onDashButtonClick = async (e) => {
+		await this.props.getUserRestaurantInfo();
 		this.props.toggleDash();
 	}
+
+	// onShowButtonCick = async (e, place_id) => {
+	// 	await this.props.getRestaurant(place_id);
+	// 	await this.props.getRestaurantComments();
+	// 	await this.props.toggleDash();
+	// 	await this.props.toggleRestaurantView();
+	// }
 
 	renderUser(){
 		return (
@@ -56,6 +69,17 @@ class Dashboard extends React.Component {
 						<h3 className="ui header">{restaurant.name}</h3>
 						<h4 className="ui sub">{restaurant.address}</h4>
 						<div className="ui list">
+							<button 
+								style={{float: "right"}}
+								className="ui blue button"
+								onClick={async(e) => {
+									await this.props.getRestaurant(place_id);
+									await this.props.getRestaurantComments();
+									this.props.toggleDash();
+									this.props.toggleRestaurantView();
+
+								}}
+							>SHOW</button>
 							<h4 className="ui sub">COMMENTS</h4>
 							{comments}
 						</div>
@@ -73,6 +97,9 @@ class Dashboard extends React.Component {
 	}
 
 	renderComponent(){
+		if (this.props.viewingRestaurant){
+			return <div><h1 className="ui headline">RESTAURANT SHOW</h1></div>;
+		}
 		if (!this.props.loggedIn) {
 			return null;
 		}
@@ -118,13 +145,18 @@ const mapStateToProps = (state) => {
 		comments: state.auth.comments,
 		restaurants: state.auth.restaurants,
 		viewingDash: state.auth.viewingDash,
+		place_id: state.restaurant.targetRestaurant.place_id,
+		viewingRestaurant: state.restaurants.viewingRestaurant
 	}
 };
 
 export default connect(
 	mapStateToProps,
 	{ 
+		getRestaurant,
+		getRestaurantComments,
 		getUserRestaurantInfo,
-		toggleDash
+		toggleDash,
+		toggleRestaurantView
 	 }
 )(Dashboard);
