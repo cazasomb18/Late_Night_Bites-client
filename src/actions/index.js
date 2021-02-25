@@ -11,7 +11,6 @@ import {
 	GET_RESTAURANT,
 	GET_RESTAURANT_DETAILS,
 	GET_RESTAURANT_COMMENTS,
-	GET_RESTAURANT_FAILED,
 	GET_USER_RESTAURANTS,
 	GEOLOCATION_DENIED,
 	HIDE_COMMENT_FORM,
@@ -165,9 +164,6 @@ export const getRestaurant = (place_id) => async dispatch => {
 		const restaurant = response.data;
 		dispatch({  type: GET_RESTAURANT, payload: restaurant });
 	}
-	if (response.status === 400) {
-		dispatch({ type: GET_RESTAURANT_FAILED });
-	}
 }
 
 
@@ -211,8 +207,11 @@ export const toggleEditCommentView = () => async (dispatch, getState) => {
 
 export const deleteComment = id => async (dispatch, getState) => {
 	const { place_id } = await getState().restaurant.targetRestaurant;
-	await comments.delete(`/restaurant/${place_id}/${id}`);
-	dispatch({ type: DELETE_COMMENT });
+	const response = await comments.delete(`/restaurant/${place_id}/${id}`);
+	if (response.status === 200) {
+		const comment = await response.deletedComment;
+		dispatch({ type: DELETE_COMMENT, payload: comment });
+	}
 }
 
 

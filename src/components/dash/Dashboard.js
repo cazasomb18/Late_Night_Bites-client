@@ -38,12 +38,26 @@ class Dashboard extends React.Component {
 		if (this.props.restaurants) {
 			return this.props.restaurants.map(( restaurant, i) => {
 				const place_id = restaurant.place_id;
+				const comments = restaurant.comments.map((comment, i) => {
+					const _id = comment._id;
+					return (
+						<div key={_id}>
+							<h5>
+								"{comment.commentBody}"
+							</h5>
+							<h5>
+								Author: {comment.commentAuthor}
+							</h5>
+						</div>
+					);
+				})
 				return (
 					<div className="ui list" key={place_id}>
 						<h3 className="ui header">{restaurant.name}</h3>
 						<h4 className="ui sub">{restaurant.address}</h4>
-						<div>
+						<div className="ui list">
 							<h4 className="ui sub">COMMENTS</h4>
+							{comments}
 						</div>
 					</div>
 				);

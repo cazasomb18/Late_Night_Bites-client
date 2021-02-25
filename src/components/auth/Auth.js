@@ -50,6 +50,7 @@ class Auth extends React.Component {
 		if (this.props.isLoggedIn) {
 			return (
 				<button
+					style={{float: "right"}}
 					onClick={this.onLogOutClick} 
 					className="ui red button"
 				>

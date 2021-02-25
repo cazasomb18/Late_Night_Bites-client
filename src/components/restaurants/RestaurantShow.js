@@ -61,9 +61,9 @@ class RestaurantShow extends React.Component {
 	renderReducerRestaurant = props => {
 		return (
 			<div className="ui list">
-				<h2 className="ui headline">{this.props.restaurant.name}</h2>
-				<h3 className="ui headline">{this.props.restaurant.address}</h3>
-				<h3 className="ui headline">{this.props.restaurant.place_id}</h3>
+				<h3 className="ui medium header">{this.props.restaurant.name}</h3>
+				<h4 className="ui sub">{this.props.restaurant.address}</h4>
+				<h4 className="ui sub">{this.props.restaurant.place_id}</h4>
 				<div className="ui sizer vertical segment">
 					<h4 className="ui medium header">Comments</h4>
 					{this.renderComments()}
@@ -94,7 +94,10 @@ class RestaurantShow extends React.Component {
 	render(){
 		return (
 			<div>
-				<ComponentTitle addingComment={this.props.addingComment}/>
+				<ComponentTitle 
+					addingComment={this.props.addingComment} 
+					viewingRestaurant={this.props.viewingRestaurant}
+				/>
 				{this.renderComponent()}
 			</div>
 		);
@@ -105,7 +108,8 @@ const mapStateToProps = state => {
 	return {
 		addingComment: state.restaurant.addingComment,
 		comments: state.comments,
-		restaurant: state.restaurant.targetRestaurant
+		restaurant: state.restaurant.targetRestaurant,
+		viewingRestaurant: state.restaurants.viewingRestaurant
 
 	}
 };

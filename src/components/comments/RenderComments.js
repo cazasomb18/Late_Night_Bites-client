@@ -13,7 +13,7 @@ import CommentEdit from './CommentEdit';
 class RenderComments extends React.Component {
 
 	componentDidMount(){
-
+		this.props.getRestaurantComments();
 	}
 
 	renderComments = (props) => {
@@ -21,15 +21,14 @@ class RenderComments extends React.Component {
 			return this.props.comments.map((comment, index) => {
 				const id = comment._id;
 				return (
-					<div className="item" key={comment._id}>
+					<div className="item" key={id}>
 						<div className="content">
 							<div className="description">
-								<h4>{index+1}</h4>
 								<h5 className="ui sub">{comment.commentBody}</h5>
 								<h5 className="ui sub">by: {comment.commentAuthor}</h5>
 								<h5 className="ui sub">comment_id: {id}</h5>
 								<button 
-									id={comment._id}
+									id={id}
 									className="ui red button"
 									onClick={ async (e) =>  {
 										await this.deleteComment(id);
@@ -37,7 +36,7 @@ class RenderComments extends React.Component {
 									}}
 								>DELETE</button>
 								<button
-									id={comment._id}
+									id={id}
 									className="ui primary button"
 									onClick={ async (e) => {
 										await this.props.getComment(id);

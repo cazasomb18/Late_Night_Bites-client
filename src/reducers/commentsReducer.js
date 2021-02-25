@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import { 
-	GET_RESTAURANT_COMMENTS, 
+	DELETE_COMMENT,
 	GET_COMMENT, 
-	SHOW_COMMENT_EDIT_FORM,
-	HIDE_COMMENT_EDIT_FORM 
+	GET_RESTAURANT_COMMENTS, 
+	HIDE_COMMENT_EDIT_FORM, 
+	SHOW_COMMENT_EDIT_FORM
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -21,6 +22,7 @@ const commentsReducer = (state=INITIAL_STATE, action) => {
 				...state,
 				targetComment: action.payload.data
 			}
+
 		case GET_RESTAURANT_COMMENTS:
 			return {
 				...state,
@@ -28,16 +30,22 @@ const commentsReducer = (state=INITIAL_STATE, action) => {
 				list: [...action.payload.data.comments],
 				ids: {..._.mapKeys(action.payload.data.comments,  '_id')}
 			}
+
 		case SHOW_COMMENT_EDIT_FORM:
 			return {
 				...state,
 				editingComment: true
 			}
+
 		case HIDE_COMMENT_EDIT_FORM:
 			return {
 				...state,
 				editingComment: false
 			}
+
+		case DELETE_COMMENT:
+			return _.omit(state, action.payload.data)
+
 		default:
 			return state;
 	}

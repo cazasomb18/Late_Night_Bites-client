@@ -5,31 +5,30 @@ const ComponentTitle = (props) => {
 	if (props.addingComment) {
 		return (
 			<div>
-				<h1 className={className}>Adding Comment View
-				<i className={"settings icon"}></i>
-				</h1>
+				<h2 className={className}>Adding Comment View
+				<i className={"plus icon"}></i>
+				</h2>
 			</div>
 		);
 	}
-	if (!props.addingComment) {
+	if (props.viewingRestaurant) {
 		return (
 			<div>
-				<h1 className={className}>Restaurant Show
+				<h2 className={className}>Restaurant Show
 				<i className={"utensils icon"}></i>
-				</h1>
+				</h2>
 			</div>
 		);
 	}
-	if (props.editingComment){
+	if (props.editingComment) {
 		return(
 			<div>
-				<h1 className={className}>Editing Comment View
+				<h2 className={className}>Editing Comment View
 				<i className={"settings icon"}></i>
-				</h1>
+				</h2>
 			</div>
 		);
 	}
-	
 };
 
 export default ComponentTitle;
