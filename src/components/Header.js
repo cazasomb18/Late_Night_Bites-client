@@ -33,25 +33,21 @@ class Header extends React.Component {
 	renderListButton(){
 		if (this.props.viewingList) {
 			return (
-				<div>
-					<button
-						className='ui red button'
-						onClick={()=> this.onListClick()}
-					>
-						CLOSE LIST
-					</button>
+				<div
+					className="ui red button"
+					onClick={()=> this.onListClick()}
+				>
+					CLOSE LIST
 				</div>
 			);
 		}
 		if (!this.props.viewingList) {
 			return (
-				<div>
-					<button
-					 	className='ui primary button'
-					 	onClick={()=> this.onListClick()}
-					>
-						RESTAURANT LIST
-					</button>
+				<div
+					className="ui primary button"
+				 	onClick={()=> this.onListClick()}
+				>
+					RESTAURANT LIST
 				</div>
 			);
 		}
@@ -60,25 +56,21 @@ class Header extends React.Component {
 	renderDashButton(){
 		if (this.props.viewingDash) {
 			return (
-				<div>
-					<button
-						className="ui red button"
-						onClick={()=> this.onDashClick()}
-					>
-						CLOSE DASH
-					</button>
+				<div 
+					className="ui red button"
+					onClick={()=> this.onDashClick()}
+				>
+					CLOSE DASH
 				</div>
 			);
 		}
 		if (!this.props.viewingDash) {
 			return (
-				<div>
-					<button
-						className="ui primary button"
-						onClick={()=> this.onDashClick()}
-					>
-						DASHBOARD
-					</button>
+				<div 
+					className="ui primary button"
+					onClick={()=> this.onDashClick()}
+				>
+					USER DASH
 				</div>
 			);
 		}
@@ -88,18 +80,18 @@ class Header extends React.Component {
 		if (this.props.isLoggedIn){	
 			return (
 				<div 
-					style={{marginTop: '10px', marginBottom: '10px'}} 
-					className="ui three column grid">
-					<div className="column">
+					style={{marginTop: "10px"}}
+					className="ui fluid three item menu">
+					<div className="item">
 						{this.renderListButton()}
 					</div>
-					<div className="column">
+					<div className="item">
 						{this.renderDashButton()}
 					</div>
-					<div className="column">
-						<button
-							className=" ui red button" 
-							onClick={()=> this.onLogOutClick()}
+					<div className="item">
+						<button 
+							className="ui red button"
+							onClick={()=>this.onLogOutClick()}
 						>
 							SIGN OUT
 						</button>
