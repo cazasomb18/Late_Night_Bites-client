@@ -1,7 +1,7 @@
 import { 
 	POST_COMMENT,
 	GET_RESTAURANT,
-	GET_RESTAURANT_DETAILS,
+	GET_RESTAURANT_PHOTO,
 	SHOW_COMMENT_FORM,
 	HIDE_COMMENT_FORM
 } from '../actions/types';
@@ -11,7 +11,7 @@ const INITIAL_STATE = {
 	targetRestaurant: '',
 	newRestaurant: '',
 	newComment: '',
-	listRestaurant: ''
+	photos: ''
 }
 
 const restaurantReducer = (state=INITIAL_STATE, action ) => {
@@ -37,10 +37,10 @@ const restaurantReducer = (state=INITIAL_STATE, action ) => {
 				...state,
 				targetRestaurant: action.payload.data
 			}
-		case GET_RESTAURANT_DETAILS:
+		case GET_RESTAURANT_PHOTO:
 			return {
 				...state,
-				listRestaurant: action.payload.data
+				photo: action.payload.data
 			}
 		default: 
 			return state;

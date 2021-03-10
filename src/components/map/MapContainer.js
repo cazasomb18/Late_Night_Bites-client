@@ -48,7 +48,7 @@ const MapContainer = props => {
 	}
 	return(
 		<div className=" ui container mapWrapper">
-			<div className="mapContainer" ref={mapContainerRef} style={{marginTop: 25, marginBottom: 25}}/>
+			<div className="mapContainer" ref={mapContainerRef} style={{marginTop: '25px', marginBottom: '25px'}}/>
 		</div>
 	); 
 };
@@ -57,7 +57,8 @@ const mapStateToProps = state => {
 	return {
 		lat: state.coords.lat,
 		lng: state.coords.lng,
-		restaurants: state.restaurants
+		restaurants: state.restaurants,
+		isLoggedIn: state.auth.isLoggedIn
 	}
 };
 

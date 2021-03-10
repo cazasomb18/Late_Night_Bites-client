@@ -7,6 +7,7 @@ import {
 	deleteComment, 
 	toggleEditCommentView 
 } from '../../actions';
+
 import CommentEdit from './CommentEdit';
 
 
@@ -24,9 +25,7 @@ class RenderComments extends React.Component {
 					<div className="item" key={id}>
 						<div className="content">
 							<div className="description">
-								<h5 className="ui sub">{comment.commentBody}</h5>
-								<h5 className="ui sub">by: {comment.commentAuthor}</h5>
-								<h5 className="ui sub">id: {id}</h5>
+								<h5 className="ui sub">{comment.commentAuthor}: {comment.commentBody}</h5>
 								<button 
 									id={id}
 									className="ui red button"

@@ -11,7 +11,7 @@ const INITIAL_STATE = {
 	list: '',
 	resLatLng: '',
 	viewingRestaurant: false,
-	viewingList: false,
+	viewingList: false
 }
 
 const restaurantsReducer = (state = INITIAL_STATE, action) => {

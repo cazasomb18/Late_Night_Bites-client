@@ -9,7 +9,7 @@ import {
 	GET_COORDS,
 	GET_COMMENT,
 	GET_RESTAURANT,
-	GET_RESTAURANT_DETAILS,
+	GET_RESTAURANT_PHOTO,
 	GET_RESTAURANT_COMMENTS,
 	GET_USER_RESTAURANTS,
 	GEOLOCATION_DENIED,
@@ -38,7 +38,6 @@ export const registerUser = formValues => async dispatch => {
 	}
 }
 
-
 export const logIn = formValues => async dispatch => {
 	const response = await auth.post('/login', { ...formValues});
 	if (response.status === 200) {
@@ -47,14 +46,12 @@ export const logIn = formValues => async dispatch => {
 	}
 }
 
-
 export const logOut = () => async dispatch => {
 	const response = await auth.get('/logout');
 	if (response.status === 200) {
 		dispatch({ type: LOG_OUT });
 	}
 }
-
 
 export const getCoords = () => dispatch => {
 	const geolocation = navigator.geolocation;
@@ -86,7 +83,6 @@ export const getCoords = () => dispatch => {
 	}	
 }
 
-
 export const getRestaurants = () => async (dispatch, getState) =>  {
 	const { lat, lng } = await getState().coords;
 	const response = await restaurants.get('/nearby?searchTerm=' + lat + ',' + lng);
@@ -96,11 +92,9 @@ export const getRestaurants = () => async (dispatch, getState) =>  {
 	}
 }
 
-
 export const toggleRegisterForm = () => dispatch => {
 	dispatch({ type: TOGGLE_REGISTER })
 }
-
 
 export const toggleLogInForm = () => dispatch => {
 	dispatch({ type: TOGGLE_LOGIN })
@@ -124,9 +118,7 @@ export const toggleDash = () => async (dispatch, getState) => {
 	if (viewingDash) {
 		dispatch({ type: CLOSE_DASH })
 	}
-
 }
-
 
 export const toggleCommentForm = () => async (dispatch, getState) => {
 	const { addingComment } = await getState().restaurant;
@@ -193,7 +185,6 @@ export const editComment = (place_id, comment_id, formValues) => async dispatch 
 	}
 }
 
-
 export const toggleEditCommentView = () => async (dispatch, getState) => {
 	const { editingComment } = await getState().comments;
 	if (!editingComment) {
@@ -204,7 +195,6 @@ export const toggleEditCommentView = () => async (dispatch, getState) => {
 	}
 }
 
-
 export const deleteComment = id => async (dispatch, getState) => {
 	const { place_id } = await getState().restaurant.targetRestaurant;
 	const response = await comments.delete(`/restaurant/${place_id}/${id}`);
@@ -214,7 +204,6 @@ export const deleteComment = id => async (dispatch, getState) => {
 	}
 }
 
-
 export const getComment = id => async dispatch => {
 	const response = await comments.get(`/${id}`);
 	if (response.status === 200) {
@@ -222,10 +211,10 @@ export const getComment = id => async dispatch => {
 	}
 }
 
-export const getRestaurantDetails = place_id => async dispatch => {
-	const response = await restaurants.get(`/restaurant/${place_id}`);
+export const getRestaurantPhoto = place_id => async (dispatch, getState) => {
+	const { place_id } = await getState().restaurant.targetRestaurant;
+ 	const response = await restaurants.get(`/restaurant/photos/${place_id}`);
 	if (response.status === 200) {
-		dispatch({ type: GET_RESTAURANT_DETAILS, payload: response.data })
+		dispatch({ type: GET_RESTAURANT_PHOTO, payload: response.data })
 	}
 }
-

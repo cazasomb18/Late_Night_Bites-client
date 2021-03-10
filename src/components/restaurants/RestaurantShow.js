@@ -8,7 +8,8 @@ import RenderComments from '../comments/RenderComments';
 
 import { 
 	getRestaurantComments, 
-	toggleCommentForm
+	toggleCommentForm,
+	getRestaurantPhoto,
 } from '../../actions';
 
 class RestaurantShow extends React.Component {
@@ -16,6 +17,7 @@ class RestaurantShow extends React.Component {
 	componentDidMount() {
 		if (this.props.restaurant) {
 			this.props.getRestaurantComments();
+			this.props.getRestaurantPhoto();
 		}
 	}
 
@@ -64,6 +66,7 @@ class RestaurantShow extends React.Component {
 				<h3 className="ui medium header">{this.props.restaurant.name}</h3>
 				<h4 className="ui sub">{this.props.restaurant.address}</h4>
 				<h4 className="ui sub">{this.props.restaurant.place_id}</h4>
+				{this.renderPhoto()}
 				<div className="ui sizer vertical segment">
 					<h4 className="ui medium header">Comments</h4>
 					{this.renderComments()}
@@ -91,6 +94,16 @@ class RestaurantShow extends React.Component {
 		this.props.toggleCommentForm();
 	}
 
+	renderPhoto = () => {
+		if (this.props.photo) {
+			return (
+				<div>
+					<img className="ui image" src={this.props.photo.url} alt="Unavailable" />
+				</div>
+			);
+		}
+	}
+
 	render(){
 		return (
 			<div>
@@ -109,8 +122,8 @@ const mapStateToProps = state => {
 		addingComment: state.restaurant.addingComment,
 		comments: state.comments,
 		restaurant: state.restaurant.targetRestaurant,
-		viewingRestaurant: state.restaurants.viewingRestaurant
-
+		viewingRestaurant: state.restaurants.viewingRestaurant,
+		photo: state.restaurant.photo
 	}
 };
 
@@ -119,6 +132,7 @@ export default connect(
 	mapStateToProps,
 	{ 
 		getRestaurantComments,
+		getRestaurantPhoto,
 		toggleCommentForm
 	}
 )(RestaurantShow)

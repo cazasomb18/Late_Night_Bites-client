@@ -21,7 +21,7 @@ class RenderList extends React.Component {
 
 	renderList (props){
 		if (this.props.restaurants) {
-			return this.props.restaurants.map( (restaurant, i) => {
+			const list = this.props.restaurants.map( (restaurant, i) => {
 				const address = restaurant.vicinity + ", " + restaurant.plus_code.compound_code.split(',')[1].split();
 				const dollarIcons = _(restaurant.price_level).times(i => <i className="dollar sign icon" key={i}></i>);
 				const starsIcons = _(Math.floor(restaurant.rating)).times(i => <i className="star outline icon" key={i}></i>);
@@ -54,6 +54,7 @@ class RenderList extends React.Component {
 				}
 				return null;
 			})
+			return <div>{list}</div>
 		} 
 		return <Spinner message="Finding Late Night Bites..."/>;
 	}
@@ -79,11 +80,6 @@ class RenderList extends React.Component {
 					<h1 className="ui header">Restaurant List</h1>
 					<div className="ui list">
 						{this.renderList()}
-						<button
-							style={{float: "right"}}
-							className="ui red button list-button"
-							onClick={this.onListButtonClick}
-						>CLOSE LIST</button>
 					</div>
 					<MapContainer/>
 				</div>
@@ -91,23 +87,12 @@ class RenderList extends React.Component {
 		}
 	}
 
-	onListButtonClick = (e) => {
-		this.props.toggleRestaurantList();
-	}
-
 	render(){
 		if (this.props.viewingList){
 			return <div>{this.renderComponent()}</div>;
 		}
 		if (!this.props.viewingList) {
-			return (
-				<div>
-					<button 
-						className="pulse-grow ui primary button"
-						onClick={this.onListButtonClick}
-					>RENDERLIST</button>
-				</div>
-			);
+			return null;
 		}
 	}
 }
@@ -119,9 +104,9 @@ const mapStateToProps = state => {
 		restaurants: state.restaurants.list.results,
 		targetRestaurant: state.restaurant.targetRestaurant,
 		user: state.auth.user,
-		viewingRestaurant: state.restaurants.viewingRestaurant,
 		viewingList: state.restaurants.viewingList,
-	}	
+		viewingRestaurant: state.restaurants.viewingRestaurant,
+	}
 }
 
 export default connect(

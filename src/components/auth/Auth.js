@@ -28,9 +28,9 @@ class Auth extends React.Component {
 		if (this.props.isRegistered && !this.props.isLoggedIn) {
 			return <div>{this.renderLogInForm()}</div>;
 		}
-		if (this.props.isRegistered && this.props.isLoggedIn) {
-			return <div>{this.renderLogOutButton()}</div>;
-		}
+		// if (this.props.isRegistered && this.props.isLoggedIn) {
+		// 	return <div>{this.renderLogOutButton()}</div>;
+		// }
 
 	}
 
@@ -38,27 +38,27 @@ class Auth extends React.Component {
 		this.props.logIn(formValues);
 	}
 
-	onLogOutClick = () => {
-		this.props.logOut();
-	}
+	// onLogOutClick = () => {
+	// 	this.props.logOut();
+	// }
 
 	onRegisterClick = formValues => {
 		this.props.registerUser(formValues);
 	}
 
-	renderLogOutButton = (props) => {
-		if (this.props.isLoggedIn) {
-			return (
-				<button
-					style={{float: "right"}}
-					onClick={this.onLogOutClick} 
-					className="ui red button"
-				>
-					Sign Out
-				</button>
-			);
-		}
-	}
+	// renderLogOutButton = (props) => {
+	// 	if (this.props.isLoggedIn) {
+	// 		return (
+	// 			<button
+	// 				style={{float: "right"}}
+	// 				onClick={this.onLogOutClick} 
+	// 				className="ui red button"
+	// 			>
+	// 				Sign Out
+	// 			</button>
+	// 		);
+	// 	}
+	// }
 
 	renderLogInForm = (props) => {
 		if (this.props.isRegistered) {

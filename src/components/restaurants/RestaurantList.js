@@ -5,10 +5,6 @@ import { getRestaurants, getCoords } from '../../actions';
 import RenderList from './RenderList';
 
 class RestaurantList extends React.Component {
-	componentDidMount(){
-
-	}
-
 	render(){
 		if (this.props.isLoggedIn && this.props.lat && this.props.lng) {
 			return (

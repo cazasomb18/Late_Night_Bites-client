@@ -51,7 +51,6 @@ class EditCommentForm extends React.Component {
 	}
 
 	render(){
-		console.log(this.props);
 		return (
 			<form className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
 				<Field 

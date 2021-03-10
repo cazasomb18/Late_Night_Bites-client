@@ -1,36 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-// import RestaurantShow from '../restaurants/RestaurantShow';
-
 import { 
 	getRestaurant,
 	getRestaurantComments, 
 	getUserRestaurantInfo, 
 	toggleDash,
+	toggleRestaurantList,
 	toggleRestaurantView
 } from '../../actions';
 
 class Dashboard extends React.Component {
 
 	componentDidMount(){
+		this.props.getUserRestaurantInfo();
 	}
-
-	onDashButtonClick = async (e) => {
-		await this.props.getUserRestaurantInfo();
-		this.props.toggleDash();
-	}
-
-	// onShowButtonCick = async (e, place_id) => {
-	// 	await this.props.getRestaurant(place_id);
-	// 	await this.props.getRestaurantComments();
-	// 	await this.props.toggleDash();
-	// 	await this.props.toggleRestaurantView();
-	// }
 
 	renderUser(){
 		return (
-			<div className="ui four column grid">
+			<div className="ui three column grid">
 				<div className="column">
 					<h5 className="ui sub">User: {this.props.user.userName}</h5>
 				</div>
@@ -38,10 +26,7 @@ class Dashboard extends React.Component {
 					<h5 className="ui sub">Email: {this.props.user.email}</h5>
 				</div>
 				<div className="column">
-					<h5 className="ui sub">Id: {this.props.user._id}</h5>
-				</div>
-				<div className="column">
-					<h5 className="ui sub">Restaurants: {this.props.restaurants.length}, Comments: {this.props.comments.length}</h5>
+					<h5 className="ui sub">User Id: {this.props.user._id}</h5>
 				</div>
 			</div>
 		);
@@ -55,11 +40,8 @@ class Dashboard extends React.Component {
 					const _id = comment._id;
 					return (
 						<div key={_id}>
-							<h5>
-								"{comment.commentBody}"
-							</h5>
-							<h5>
-								Author: {comment.commentAuthor}
+							<h5 className='ui sub'>
+								{comment.commentAuthor}: "{comment.commentBody}"
 							</h5>
 						</div>
 					);
@@ -72,10 +54,11 @@ class Dashboard extends React.Component {
 							<button 
 								style={{float: "right"}}
 								className="ui blue button"
-								onClick={async(e) => {
+								onClick={ async (e) => {
 									await this.props.getRestaurant(place_id);
 									await this.props.getRestaurantComments();
 									this.props.toggleDash();
+									this.props.toggleRestaurantList();
 									this.props.toggleRestaurantView();
 
 								}}
@@ -97,42 +80,28 @@ class Dashboard extends React.Component {
 	}
 
 	renderComponent(){
-		if (this.props.viewingRestaurant){
-			return <div><h1 className="ui headline">RESTAURANT SHOW</h1></div>;
+		if (this.props.viewingRestaurant) {
+			return null;
 		}
 		if (!this.props.loggedIn) {
 			return null;
 		}
 		if (!this.props.viewingDash) {
-			return(
-				<div>
-					<button 
-						style={{float: "right"}}
-						className="ui primary button"
-						onClick={this.onDashButtonClick}
-					>DASHBOARD</button>
-				</div>
-			); 
+			return null;
 		}
 		if (this.props.viewingDash) {
 			return (
 				<div>
+					{this.renderUser()}
 					<h1 className="ui headline">Welcome to your Dashboard, {this.props.user.userName}</h1>
-					<div>{this.renderUser()}</div>
 					<h3 className="ui headline">{}</h3>
 					{this.renderRestaurants()}
-					<button 
-						style={{float: "right"}}
-						className="ui red button"
-						onClick={this.onDashButtonClick}
-					>CLOSE DASH</button>
 				</div>
 			);
 		}
 	}
 
 	render(){
-		console.log("DASH PROPS: \n", this.props);
 		return <div>{this.renderComponent()}</div>;
 	}
 
@@ -157,6 +126,7 @@ export default connect(
 		getRestaurantComments,
 		getUserRestaurantInfo,
 		toggleDash,
+		toggleRestaurantList,
 		toggleRestaurantView
 	 }
 )(Dashboard);

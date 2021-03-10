@@ -20,21 +20,30 @@
 	transform: translateY(-25px);
 }
 
-@-webkit-keyframes pulse-grow {
-	to {
-		-webkit-transform: scale(1.1);
-		transform: scale(1.1);
+.btn {
+	box-shadow: 0 0 0 0 rgba(0,0,0,1);
+	transform: scale(1);
+	animation: pulse 0.7s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 10px rgba(0,0,0,0.7);
+	}
+	70% {
+		transform: scale(1.05);
+		box-shadow: 0 0 0 10px rgba(0,0,0,0);
+	}
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0,0,0,0);
 	}
 }
 
-@-keyframes pulse-grow {
-	to {
-		-webkit-transform: scale(1.1);
-		transform: scale(1.1);
-	}
-}
 
-.pulse-grow {
+
+/*.pulse-grow {
 	display: inline-block;
 	vertical-align: margin-left;
 	-webkit-transform: perspective(1px) translateZ(0);
@@ -55,4 +64,4 @@
 	animation-iteration-count: infinite;
 	-webkit-animation-direction: alternate;
 	animation-direction: alternate;
-}
+}*/
