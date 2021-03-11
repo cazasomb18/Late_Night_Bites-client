@@ -14,7 +14,9 @@ import {
 
 class Header extends React.Component {
 	componentDidMount(){
-		this.props.getRestaurants();
+		if (this.props.isLoggedIn){
+			this.props.getRestaurants();
+		}
 	}
 
 	onListClick = (e) => {
